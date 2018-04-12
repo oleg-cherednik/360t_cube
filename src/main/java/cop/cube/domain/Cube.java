@@ -37,10 +37,11 @@ public class Cube {
 
     public boolean addNext(Shape shape) {
         if (side == Side.SIDE_1) {
-
-
-
-            side1 = shape;
+            if(addSide1(shape)) {
+                side = Side.SIDE_2;
+                return true;
+            }
+            return false;
         }
 
         return true;
@@ -54,9 +55,10 @@ public class Cube {
         return false;
     }
 
-    private boolean addSide1(Shape side) {
+    private boolean addSide1(Shape shape) {
 
-        side1 = side;
+
+        side1 = shape;
     }
 
     private enum Side {
