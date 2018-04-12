@@ -20,24 +20,22 @@ import java.util.function.Predicate;
  */
 public class Cube {
 
+    private final int width;
     private final char[][][] data;
 
     public Cube(int width) {
+        this.width = width;
         data = new char[width][width][width];
     }
-
-    private Shape side1 = Shape.NULL;
-    private Shape side2 = Shape.NULL;
-    private Shape side3 = Shape.NULL;
-    private Shape side4 = Shape.NULL;
-    private Shape side5 = Shape.NULL;
-    private Shape side6 = Shape.NULL;
 
     private Side side = Side.SIDE_1;
 
     public boolean addNext(Shape shape) {
+        if (width != shape.getWidth())
+            throw new CubeException("Shape's width does not match with cube's width");
+
         if (side == Side.SIDE_1) {
-            if(addSide1(shape)) {
+            if (addSide1(shape)) {
                 side = Side.SIDE_2;
                 return true;
             }
@@ -56,9 +54,25 @@ public class Cube {
     }
 
     private boolean addSide1(Shape shape) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < width; j++) {
+                if (shape.mask[i][j]) {
+                    if (data[i][j][0] == '\0' || data[i][j][0] == '1')
+                        data[i][j][0] = '1';
+                    else {
+                        // clear
+                        for (int ii = 0; ii < width; ii++)
+                            for (int jj = 0; jj < width; jj++)
+                                if (data[ii][jj][0] == '\0' || data[ii][jj][0] == '1')
+                                    data[ii][jj][0] = '\0';
 
+                        return false;
+                    }
+                }
+            }
+        }
 
-        side1 = shape;
+        return false;
     }
 
     private enum Side {
