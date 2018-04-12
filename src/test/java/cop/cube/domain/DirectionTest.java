@@ -14,35 +14,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DirectionTest {
 
     public void shouldNotRotateWhenUpDirection() {
-        assertThat(Direction.UP.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create(new boolean[][] {
+        assertThat(Direction.UP.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.UP, new boolean[][] {
                 { true, false, false },
                 { false, true, true },
                 { true, true, false } }));
     }
 
     public void shouldRotateRightWhenRightDirection() {
-        assertThat(Direction.RIGHT.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create(new boolean[][] {
+        assertThat(Direction.RIGHT.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.RIGHT, new boolean[][] {
                 { true, false, true },
                 { true, true, false },
                 { false, true, false } }));
     }
 
     public void shouldRotateLeftWhenLeftDirection() {
-        assertThat(Direction.LEFT.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create(new boolean[][] {
+        assertThat(Direction.LEFT.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.LEFT, new boolean[][] {
                 { false, true, false },
                 { false, true, true },
                 { true, false, true } }));
     }
 
     public void shouldRotateDownWhenDownDirection() {
-        assertThat(Direction.DOWN.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create(new boolean[][] {
+        assertThat(Direction.DOWN.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.DOWN, new boolean[][] {
                 { false, true, true },
                 { true, true, false },
                 { false, false, true } }));
     }
 
     private static final Supplier<Shape> CREATE_MATRIX =
-            () -> Shape.create(new boolean[][] {
+            () -> Shape.create('A', Direction.UP, new boolean[][] {
                     { true, false, false },
                     { false, true, true },
                     { true, true, false } });

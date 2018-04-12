@@ -14,13 +14,16 @@ import java.util.Set;
  */
 public final class Shape {
 
-    public static final Shape NULL = new Shape(null);
+    public static final Shape NULL = new Shape('\0', Direction.UP, null);
 
+    private final char name;
+    private final Direction direction;
     public final boolean[][] mask;
 
-    public static Shape create(String data, char marker) {
-        if (data == null || data.trim().isEmpty())
+    public static Shape create(char name, String data, char marker) {
+        if (data == null || data.trim().isEmpty()) {
             return NULL;
+        }
 
         String[] rows = data.split("\n");
         int width = rows.length;
@@ -29,22 +32,26 @@ public final class Shape {
         for (int i = 0; i < width; i++) {
             String row = rows[i];
 
-            if (row.length() != width)
+            if (row.length() != width) {
                 throw new CubeException("Shape should be a square");
+            }
 
-            for (int j = 0; j < width; j++)
+            for (int j = 0; j < width; j++) {
                 mask[i][j] = row.charAt(j) == marker;
+            }
         }
 
-        return new Shape(mask);
+        return new Shape(name, Direction.UP, mask);
     }
 
-    public static Shape create(boolean[][] mask) {
-        return mask != null && mask.length > 0 ? new Shape(mask) : NULL;
+    public static Shape create(char name, Direction direction, boolean[][] mask) {
+        return mask != null && mask.length > 0 ? new Shape(name, direction, mask) : NULL;
     }
 
     @SuppressWarnings({ "MethodCanBeVariableArityMethod", "AssignmentOrReturnOfFieldWithMutableType" })
-    private Shape(boolean[][] mask) {
+    private Shape(char name, Direction direction, boolean[][] mask) {
+        this.name = name;
+        this.direction = direction;
         this.mask = mask;
     }
 
@@ -52,11 +59,14 @@ public final class Shape {
         return mask != null ? mask.length : 0;
     }
 
-
+    public char getName() {
+        return name;
+    }
 
     public Set<Direction> getUniqueDirections() {
-        if (mask == null)
+        if (mask == null) {
             return Collections.emptySet();
+        }
 
         int up = getSide(Direction.UP);
         int right = getSide(Direction.RIGHT);
@@ -66,14 +76,18 @@ public final class Shape {
         Set<Direction> directions = new LinkedHashSet<>();
         Set<Integer> sides = new HashSet<>();
 
-        if (sides.add(up))
+        if (sides.add(up)) {
             directions.add(Direction.UP);
-        if (sides.add(right))
+        }
+        if (sides.add(right)) {
             directions.add(Direction.RIGHT);
-        if (sides.add(down))
+        }
+        if (sides.add(down)) {
             directions.add(Direction.DOWN);
-        if (sides.add(left))
+        }
+        if (sides.add(left)) {
             directions.add(Direction.LEFT);
+        }
 
         return directions;
     }
@@ -101,10 +115,12 @@ public final class Shape {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!(obj instanceof Shape))
+        }
+        if (!(obj instanceof Shape)) {
             return false;
+        }
         return Arrays.deepEquals(mask, ((Shape)obj).mask);
     }
 
@@ -115,22 +131,6 @@ public final class Shape {
 
     @Override
     public String toString() {
-        if (mask == null)
-            return "<empty>";
-
-        boolean newLine = false;
-        StringBuilder buf = new StringBuilder();
-
-        for (boolean[] row : mask) {
-            if (newLine)
-                buf.append('\n');
-
-            for (boolean col : row)
-                buf.append(col ? 'o' : '.');
-
-            newLine = true;
-        }
-
-        return buf.toString();
+        return this != NULL ? String.valueOf(name) + '-' + direction : "<empty>";
     }
 }

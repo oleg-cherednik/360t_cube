@@ -4,6 +4,7 @@ import cop.cube.exceptions.CubeException;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public final class ShapeSet implements Iterable<Shape> {
                                     .filter(Objects::nonNull)
                                     .map(Supplier::get)
                                     .filter(shape -> shape != null && shape != Shape.NULL)
-                                    .collect(Collectors.toSet());
+                                    .collect(Collectors.toCollection(LinkedHashSet::new));
 
         checkTotalNumberOfShapes(shapes);
         checkShapesWithSameWidth(shapes);

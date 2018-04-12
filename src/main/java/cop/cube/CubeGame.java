@@ -45,13 +45,15 @@ public class CubeGame {
     private static void foo(Cube cube, Queue<Shape> shapes, List<Cube> cubes) {
         if (shapes.isEmpty()) {
             if (cube.isComplete())
-                // TODO copy
+            // TODO copy
+            {
                 cubes.add(cube);
+            }
         } else {
             Shape shape = shapes.remove();
 
             for (Direction direction : shape.getUniqueDirections()) {
-                Shape rotatedShape = direction.rotate().apply(Shape.create(shape.mask));
+                Shape rotatedShape = direction.rotate().apply(Shape.create(shape.getName(), direction, shape.mask));
 
                 if (cube.addNext(rotatedShape)) {
                     foo(cube, new LinkedList<>(shapes), cubes);
@@ -63,7 +65,7 @@ public class CubeGame {
 
 
     public static void main(String... args) {
-        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_1, SHAPE_2, SHAPE_3, SHAPE_4, SHAPE_5, SHAPE_6);
+        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_E, SHAPE_B, SHAPE_F, SHAPE_D, SHAPE_C);
         ShapeSet shapeSet = ShapeSet.create(shapeSuppliers);
         CubeGame cubeGame = new CubeGame(shapeSet);
 
@@ -74,11 +76,11 @@ public class CubeGame {
 
     }
 
-    private static final Supplier<Shape> SHAPE_1 = () -> Shape.create("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER);
-    private static final Supplier<Shape> SHAPE_2 = () -> Shape.create("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER);
-    private static final Supplier<Shape> SHAPE_3 = () -> Shape.create("o.o.o\nooooo\n.ooo.\nooooo\no.o.o", MARKER);
-    private static final Supplier<Shape> SHAPE_4 = () -> Shape.create(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER);
-    private static final Supplier<Shape> SHAPE_5 = () -> Shape.create(".o.o.\nooooo\n.ooo.\nooooo\no.o..", MARKER);
-    private static final Supplier<Shape> SHAPE_6 = () -> Shape.create(".o.o.\n.oooo\noooo.\n.oooo\noo.oo", MARKER);
+    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', "..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER);
+    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', "oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER);
+    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', "..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER);
+    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', "oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER);
+    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', "o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER);
+    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', ".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER);
 
 }
