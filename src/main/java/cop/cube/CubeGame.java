@@ -34,15 +34,14 @@ public final class CubeGame {
 
     public int findAllSolutions() {
         if (totalSolution == -1) {
-            Cube cube = new Cube(shapeSet.getWidth());
-            solve(cube, shapeSet.getShapes());
+            solve(new Cube(shapeSet.getWidth()), shapeSet.getShapes(), false);
             totalSolution = cubes.size();
         }
 
         return totalSolution;
     }
 
-    private void solve(Cube cube, Set<Shape> availableShapes) {
+    private void solve(Cube cube, Set<Shape> availableShapes, boolean useRelated) {
         if (availableShapes.isEmpty()) {
             if (cube.isComplete())
                 cubes.add(cube.clone());
@@ -58,13 +57,16 @@ public final class CubeGame {
                     bb++;
                 }
             }
+
             for (Shape shape : availableShapes) {
-                for (Shape sh : shape.getRelatedShapes()) {
+                List<Shape> relatedShapes = useRelated ? shape.getRelatedShapes() : Arrays.asList(shape);
+
+                for (Shape sh : relatedShapes) {
                     if (cube.addNextSide(sh)) {
                         Set<Shape> aa = new LinkedHashSet<>(availableShapes);
                         aa.remove(shape);
 
-                        solve(cube, aa.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(aa));
+                        solve(cube, aa.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(aa), true);
                         cube.removeCurrentSide();
                     }
                 }
