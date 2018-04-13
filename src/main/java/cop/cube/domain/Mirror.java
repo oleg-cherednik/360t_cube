@@ -6,26 +6,22 @@ package cop.cube.domain;
  */
 @SuppressWarnings("MethodCanBeVariableArityMethod")
 public enum Mirror {
-    OFF {
-        @Override
-        public void apply(boolean[][] mask) {
-        }
-    },
+    OFF,
     HORIZONTAL {
         @Override
         public void apply(boolean[][] mask) {
-            if (mask == null)
-                return;
+            if (mask != null) {
+                final int width = mask.length;
 
-            final int width = mask.length;
-
-            for (int y1 = 0, y2 = width - 1; y1 < y2; y1++, y2--)
-                for (int x = 0; x < width; x++)
-                    swap(x, y1, x, y2, mask);
+                for (int y1 = 0, y2 = width - 1; y1 < y2; y1++, y2--)
+                    for (int x = 0; x < width; x++)
+                        swap(x, y1, x, y2, mask);
+            }
         }
     };
 
-    public abstract void apply(boolean[][] mask);
+    public void apply(boolean[][] mask) {
+    }
 
     protected static void swap(int x1, int y1, int x2, int y2, boolean[][] mask) {
         boolean tmp = mask[y1][x1];

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -16,6 +17,7 @@ public final class Shape {
 
     public static final Shape NULL = new Shape('\0', Direction.UP, Mirror.OFF, null);
 
+    private final String id;
     private final char name;
     private final Direction direction;
     private final Mirror mirror;
@@ -31,6 +33,7 @@ public final class Shape {
 
     @SuppressWarnings({ "MethodCanBeVariableArityMethod", "AssignmentOrReturnOfFieldWithMutableType" })
     private Shape(char name, Direction direction, Mirror mirror, boolean[][] mask) {
+        id = this != NULL ? String.valueOf(name) + '-' + direction + '-' + mirror : "<empty>";
         this.name = name;
         this.direction = direction;
         this.mirror = mirror;
@@ -124,7 +127,21 @@ public final class Shape {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Shape))
+            return false;
+        return id.equals(((Shape)obj).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString() {
-        return this != NULL ? String.valueOf(name) + '-' + direction + '-' + mirror : "<empty>";
+        return id;
     }
 }

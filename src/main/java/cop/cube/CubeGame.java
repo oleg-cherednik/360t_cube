@@ -1,15 +1,18 @@
 package cop.cube;
 
 import cop.cube.domain.Cube;
+import cop.cube.domain.Direction;
+import cop.cube.domain.Mirror;
 import cop.cube.domain.Shape;
 import cop.cube.domain.ShapeSet;
 import cop.cube.exceptions.CubeException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Queue;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -32,27 +35,56 @@ public final class CubeGame {
     public int findAllSolutions() {
         if (totalSolution == -1) {
             Cube cube = new Cube(shapeSet.getWidth());
-            solve(cube, new LinkedList<>(shapeSet.getShapes()));
+            solve(cube, shapeSet.getShapes());
             totalSolution = cubes.size();
         }
 
         return totalSolution;
     }
 
-    private void solve(Cube cube, Queue<Shape> shapes) {
-        if (shapes.isEmpty()) {
-            System.out.println("==========");
+    private void solve(Cube cube, Set<Shape> availableShapes) {
+        if (availableShapes.isEmpty()) {
             System.out.println(cube.print(MARKER));
-            System.out.println("==========");
+            System.out.println();
             if (cube.isComplete())
                 cubes.add(cube.clone());
         } else {
-            for (Shape shape : shapes.remove().getRelatedShapes()) {
-                if (cube.addNext(shape)) {
-                    solve(cube, new LinkedList<>(shapes));
-                    cube.removeCurrentSide();
+            if(cube.shapes.size() == 5) {
+                List<Shape> aa = new ArrayList<>(cube.shapes);
+                if(aa.get(0).toString().equals("A-" + Direction.RIGHT + '-' + Mirror.OFF)
+                        && aa.get(1).toString().equals("B-" + Direction.UP + '-' + Mirror.OFF)
+                        && aa.get(2).toString().equals("F-" + Direction.UP + '-' + Mirror.OFF)
+                        && aa.get(3).toString().equals("C-" + Direction.LEFT + '-' + Mirror.OFF)
+                        && aa.get(4).toString().equals("D-" + Direction.LEFT + '-' + Mirror.OFF)) {
+                    int bb = 0;
+                    bb++;
                 }
             }
+            for (Shape shape : availableShapes) {
+                List<Shape> relatedShapes = shape.getRelatedShapes();
+
+                int aaa = 0;
+                aaa++;
+
+                for (Shape sh : relatedShapes) {
+                    if (cube.addNextSide(sh)) {
+
+                        System.out.println();
+
+                        Set<Shape> aa = new LinkedHashSet<>(availableShapes);
+                        aa.remove(shape);
+
+                        solve(cube, Collections.unmodifiableSet(aa));
+                        cube.removeCurrentSide();
+                    } else {
+//                    System.out.println(cube.print(MARKER));
+//                    System.out.println();
+                    }
+                }
+            }
+
+            int a = 0;
+            a++;
         }
     }
 
