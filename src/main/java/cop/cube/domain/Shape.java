@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,20 +81,6 @@ public final class Shape {
         return buf.toString();
     }
 
-    public Set<Direction> getDirections() {
-        if (this == NULL)
-            return Collections.emptySet();
-
-        Set<Direction> directions = new LinkedHashSet<>();
-        Set<Integer> sides = new HashSet<>();
-
-        for (Direction direction : Direction.values())
-            if (sides.add(direction.hash(mask)))
-                directions.add(direction);
-
-        return directions;
-    }
-
     public List<Shape> getRelatedShapes() {
         if (this == NULL)
             return Collections.emptyList();
@@ -136,23 +121,7 @@ public final class Shape {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Shape)) {
-            return false;
-        }
-        return Arrays.deepEquals(mask, ((Shape)obj).mask);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(mask);
-    }
-
-    @Override
     public String toString() {
-        return this != NULL ? String.valueOf(name) + '-' + direction : "<empty>";
+        return this != NULL ? String.valueOf(name) + '-' + direction + '-' + mirror : "<empty>";
     }
 }

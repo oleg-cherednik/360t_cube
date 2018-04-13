@@ -53,6 +53,7 @@ public final class Cube implements Cloneable {
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Cube clone() {
         Cube cube = new Cube(width);
+        cube.side = side;
 
         for (int z = 0; z < width; z++)
             for (int y = 0; y < width; y++)
@@ -94,7 +95,7 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int x = 0; x < width; x++)
-                        if (data[y][x][z] == '\0')
+                        if (!isTaken(x, y, z, data))
                             return false;
 
                 return true;
@@ -122,19 +123,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("hash:1");
-
                 final int width = width(data);
                 final int z = 0;
 
-                for (int y = 0; y < width; y++) {
-                    for (int x = 0; x < width; x++) {
-                        System.out.format("[%s%d%d]", y, x, z);
+                for (int y = 0; y < width; y++)
+                    for (int x = 0; x < width; x++)
                         add(shape.isTaken(x, y), x, y, z, data);
-                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-                    }
-                    System.out.println();
-                }
 
                 return true;
             }
@@ -147,7 +141,7 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int z = width - 1; z >= 0; z--)
-                        if (data[y][x][z] == '\0')
+                        if (!isTaken(x, y, z, data))
                             return false;
 
                 return true;
@@ -175,19 +169,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("hash:2");
-
                 final int width = width(data);
                 final int x = 0;
 
-                for (int y = 0; y < width; y++) {
-                    for (int z = width - 1; z >= 0; z--) {
-                        System.out.format("[%s%d%d]", y, x, z);
+                for (int y = 0; y < width; y++)
+                    for (int z = width - 1; z >= 0; z--)
                         add(shape.isTaken(z, y), x, y, z, data);
-                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-                    }
-                    System.out.println();
-                }
 
                 return true;
             }
@@ -200,7 +187,7 @@ public final class Cube implements Cloneable {
 
                 for (int z = 0; z < width; z++)
                     for (int x = 0; x < width; x++)
-                        if (data[y][x][z] == '\0')
+                        if (!isTaken(x, y, z, data))
                             return false;
 
                 return true;
@@ -228,19 +215,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("hash:3");
-
                 final int width = width(data);
                 final int y = width - 1;
 
-                for (int z = 0; z < width; z++) {
-                    for (int x = 0; x < width; x++) {
-                        System.out.format("[%s%d%d]", y, x, z);
+                for (int z = 0; z < width; z++)
+                    for (int x = 0; x < width; x++)
                         add(shape.isTaken(x, z), x, y, z, data);
-                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-                    }
-                    System.out.println();
-                }
 
                 return true;
             }
@@ -253,7 +233,7 @@ public final class Cube implements Cloneable {
 
                 for (int z = width - 1; z >= 0; z--)
                     for (int x = 0; x < width; x++)
-                        if (data[y][x][z] == '\0')
+                        if (!isTaken(x, y, z, data))
                             return false;
 
                 return true;
@@ -281,19 +261,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("hash:4");
-
                 final int width = width(data);
                 final int y = 0;
 
-                for (int z = width - 1; z >= 0; z--) {
-                    for (int x = 0; x < width; x++) {
-                        System.out.format("[%s%d%d]", y, x, z);
+                for (int z = width - 1; z >= 0; z--)
+                    for (int x = 0; x < width; x++)
                         add(shape.isTaken(x, z), x, y, z, data);
-                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-                    }
-                    System.out.println();
-                }
 
                 return true;
             }
@@ -306,7 +279,7 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int z = 0; z < width; z++)
-                        if (data[y][x][z] == '\0')
+                        if (!isTaken(x, y, z, data))
                             return false;
 
                 return true;
@@ -334,19 +307,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("hash:5");
-
                 final int width = width(data);
                 final int x = width - 1;
 
-                for (int y = 0; y < width; y++) {
-                    for (int z = 0; z < width; z++) {
-                        System.out.format("[%s%d%d]", y, x, z);
+                for (int y = 0; y < width; y++)
+                    for (int z = 0; z < width; z++)
                         add(shape.isTaken(z, y), x, y, z, data);
-                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-                    }
-                    System.out.println();
-                }
 
                 return true;
             }
@@ -359,7 +325,7 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int x = 0; x < width; x++)
-                        if (data[y][x][z] == '\0')
+                        if (!isTaken(x, y, z, data))
                             return false;
 
                 return true;
@@ -387,19 +353,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("hash:6");
-
                 final int width = width(data);
                 final int z = width - 1;
 
-                for (int y = 0; y < width; y++) {
-                    for (int x = 0; x < width; x++) {
-                        System.out.format("[%s%d%d]", y, x, z);
+                for (int y = 0; y < width; y++)
+                    for (int x = 0; x < width; x++)
                         add(shape.isTaken(x, y), x, y, z, data);
-                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-                    }
-                    System.out.println();
-                }
 
                 return true;
             }
@@ -427,7 +386,11 @@ public final class Cube implements Cloneable {
             data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
         }
 
-        protected final int width(char[][][] data) {
+        protected static boolean isTaken(int x, int y, int z, char[][][] data) {
+            return data[y][x][z] != '\0';
+        }
+
+        protected static int width(char[][][] data) {
             return data.length;
         }
 

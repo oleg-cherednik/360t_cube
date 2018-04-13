@@ -21,6 +21,8 @@ public final class CubeGame {
     private static final char MARKER = 'o';
 
     private final ShapeSet shapeSet;
+    private final List<Cube> cubes = new ArrayList<>();
+
     private int totalSolution = -1;
 
     private CubeGame(ShapeSet shapeSet) {
@@ -31,18 +33,14 @@ public final class CubeGame {
         if (totalSolution == -1) {
             Cube cube = new Cube(shapeSet.getWidth());
             Queue<Shape> shapes = new LinkedList<>(shapeSet.getShapes());
-            List<Cube> cubes = new ArrayList<>();
-
-            foo(cube, shapes, cubes);
-
-
-            // TODO find all solutions;
+            foo(cube, shapes);
+            totalSolution = cubes.size();
         }
 
         return totalSolution;
     }
 
-    private static void foo(Cube cube, Queue<Shape> shapes, List<Cube> cubes) {
+    private void foo(Cube cube, Queue<Shape> shapes) {
         if (shapes.isEmpty()) {
             if (cube.isComplete()) {
                 cubes.add(cube.clone());
@@ -50,7 +48,7 @@ public final class CubeGame {
         } else {
             for (Shape shape : shapes.remove().getRelatedShapes()) {
                 if (cube.addNext(shape)) {
-                    foo(cube, new LinkedList<>(shapes), cubes);
+                    foo(cube, new LinkedList<>(shapes));
                     cube.removeCurrentSide();
                 }
             }
