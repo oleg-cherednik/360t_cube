@@ -1,19 +1,17 @@
 package cop.cube;
 
 import cop.cube.domain.Cube;
-import cop.cube.domain.Direction;
-import cop.cube.domain.Mirror;
 import cop.cube.domain.Shape;
-import cop.cube.domain.ShapeSet;
 import cop.cube.exceptions.CubeException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Oleg Cherednik
@@ -22,77 +20,87 @@ import java.util.function.Supplier;
 public final class CubeGame {
 
     private static final char MARKER = 'o';
+    private static final int TOTAL = 6;
 
-    private final ShapeSet shapeSet;
+    private final int width;
+    private final Set<Shape> shapes;
     private final List<Cube> cubes = new ArrayList<>();
 
     private int totalSolution = -1;
 
-    private CubeGame(ShapeSet shapeSet) {
-        this.shapeSet = shapeSet != null ? shapeSet : ShapeSet.NULL;
+    public static CubeGame create(Set<Shape> shapes) {
+        shapes = shapes != null ? shapes : Collections.emptySet();
+
+        checkTotalNumberOfShapes(shapes);
+        checkShapesWithSameWidth(shapes);
+
+        return new CubeGame(shapes);
+    }
+
+    private static void checkTotalNumberOfShapes(Set<Shape> shapes) {
+        if (shapes.size() != TOTAL)
+            throw new CubeException(String.format("Found %d shapes, but exactly %d expected", shapes.size(), TOTAL));
+    }
+
+    private static void checkShapesWithSameWidth(Set<Shape> shapes) {
+        Set<Integer> widths = shapes.stream().map(Shape::getWidth).collect(Collectors.toSet());
+
+        if (widths.size() != 1)
+            throw new CubeException("All shapes in the cube should be with same width");
+    }
+
+    private CubeGame(Set<Shape> shapes) {
+        width = shapes.isEmpty() ? 0 : shapes.iterator().next().getWidth();
+        this.shapes = Collections.unmodifiableSet(shapes);
     }
 
     public int findAllSolutions() {
         if (totalSolution == -1) {
-            solve(new Cube(shapeSet.getWidth()), shapeSet.getShapes(), false);
+            solve(new Cube(width), shapes, false);
             totalSolution = cubes.size();
         }
 
         return totalSolution;
     }
 
-    private void solve(Cube cube, Set<Shape> availableShapes, boolean useRelated) {
-        if (availableShapes.isEmpty()) {
-            if (cube.isComplete())
-                cubes.add(cube.clone());
-        } else {
-            if (cube.shapes.size() == 5) {
-                List<Shape> aa = new ArrayList<>(cube.shapes);
-                if (aa.get(0).toString().equals("A-" + Direction.RIGHT + '-' + Mirror.OFF)
-                        && aa.get(1).toString().equals("B-" + Direction.UP + '-' + Mirror.OFF)
-                        && aa.get(2).toString().equals("F-" + Direction.UP + '-' + Mirror.OFF)
-                        && aa.get(3).toString().equals("C-" + Direction.LEFT + '-' + Mirror.OFF)
-                        && aa.get(4).toString().equals("D-" + Direction.LEFT + '-' + Mirror.OFF)) {
-                    int bb = 0;
-                    bb++;
-                }
-            }
+    private void solve(Cube cube, Set<Shape> shapes, boolean useRelated) {
+        if (shapes.isEmpty() && cube.isComplete()) {
+            cubes.add(cube.clone());
+            return;
+        }
 
-            for (Shape shape : availableShapes) {
-                List<Shape> relatedShapes = useRelated ? shape.getRelatedShapes() : Arrays.asList(shape);
+        for (Shape shape : shapes) {
+            List<Shape> relatedShapes = useRelated ? shape.getRelatedShapes() : Collections.singletonList(shape);
+            Set<Shape> newAvailableShapes = copyAndRemoveCurrentShape(shape, shapes);
 
-                for (Shape sh : relatedShapes) {
-                    if (cube.addNextSide(sh)) {
-                        Set<Shape> aa = new LinkedHashSet<>(availableShapes);
-                        aa.remove(shape);
-
-                        solve(cube, aa.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(aa), true);
-                        cube.removeCurrentSide();
-                    }
+            for (Shape relatedShape : relatedShapes) {
+                if (cube.addNextSide(relatedShape)) {
+                    solve(cube, newAvailableShapes, true);
+                    cube.removeCurrentSide();
                 }
             }
         }
     }
 
-    public static void main(String... args) {
-//        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_E, SHAPE_B, SHAPE_F, SHAPE_D, SHAPE_C);
-        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_B, SHAPE_C, SHAPE_D, SHAPE_E, SHAPE_F);
-        ShapeSet shapeSet = ShapeSet.create(shapeSuppliers);
-        CubeGame cubeGame = new CubeGame(shapeSet);
+    private static Set<Shape> copyAndRemoveCurrentShape(Shape shape, Set<Shape> shapes) {
+        if (shapes.isEmpty())
+            return Collections.emptySet();
 
-        int totalSolution = cubeGame.findAllSolutions();
+        Set<Shape> res = new LinkedHashSet<>(shapes);
+        res.remove(shape);
 
-        int a = 0;
-        a++;
-
+        return res.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(res);
     }
 
-//    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
-//    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', convert("oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER));
-//    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', convert("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER));
-//    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', convert("oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER));
-//    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', convert("o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER));
-//    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', convert(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER));
+    public static void main(String... args) {
+        Set<Shape> shapes = Stream.of(SHAPE_A, SHAPE_B, SHAPE_C, SHAPE_D, SHAPE_E, SHAPE_F)
+                                  .map(Supplier::get)
+                                  .collect(Collectors.toSet());
+
+        CubeGame cubeGame = create(shapes);
+        int totalSolution = cubeGame.findAllSolutions();
+        System.out.println("Total " + totalSolution + " found");
+    }
 
     private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("o.o.o\nooooo\n.ooo.\nooooo\no.o.o", MARKER));
     private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', convert(".o.o.\n.oooo\noooo.\n.oooo\noo.o.", MARKER));
