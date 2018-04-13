@@ -52,7 +52,7 @@ public class CubeGame {
             Shape shape = shapes.remove();
 
             for (Direction direction : shape.getUniqueDirections()) {
-                Shape rotatedShape = direction.rotate().apply(Shape.create(shape.getName(), direction, shape.mask));
+                Shape rotatedShape = direction.rotate().apply(Shape.create(shape.getName(), direction, shape.getMask()));
 
                 if (cube.addNext(rotatedShape)) {
                     foo(cube, new LinkedList<>(shapes), cubes);

@@ -111,7 +111,7 @@ public final class Cube {
                 for (int y = 0; y < width; y++) {
                     for (int x = 0; x < width; x++) {
                         System.out.format("[%s%d%d]", y, x, z);
-                        add(shape.mask[y][x], x, y, z, data);
+                        add(shape.isTaken(x, y), x, y, z, data);
                         System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
                     }
                     System.out.println();
@@ -159,7 +159,7 @@ public final class Cube {
                 for (int y = 0; y < width; y++) {
                     for (int z = width - 1; z >= 0; z--) {
                         System.out.format("[%s%d%d]", y, x, z);
-                        add(shape.mask[y][z], x, y, z, data);
+                        add(shape.isTaken(z, y), x, y, z, data);
                         System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
                     }
                     System.out.println();
@@ -207,7 +207,7 @@ public final class Cube {
                 for (int z = 0; z < width; z++) {
                     for (int x = 0; x < width; x++) {
                         System.out.format("[%s%d%d]", y, x, z);
-                        add(shape.mask[z][x], x, y, z, data);
+                        add(shape.isTaken(x, z), x, y, z, data);
                         System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
                     }
                     System.out.println();
@@ -255,7 +255,7 @@ public final class Cube {
                 for (int z = width - 1; z >= 0; z--) {
                     for (int x = 0; x < width; x++) {
                         System.out.format("[%s%d%d]", y, x, z);
-                        add(shape.mask[z][x], x, y, z, data);
+                        add(shape.isTaken(x, z), x, y, z, data);
                         System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
                     }
                     System.out.println();
@@ -303,7 +303,7 @@ public final class Cube {
                 for (int y = 0; y < width; y++) {
                     for (int z = 0; z < width; z++) {
                         System.out.format("[%s%d%d]", y, x, z);
-                        add(shape.mask[y][z], x, y, z, data);
+                        add(shape.isTaken(z, y), x, y, z, data);
                         System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
                     }
                     System.out.println();
@@ -351,7 +351,7 @@ public final class Cube {
                 for (int y = 0; y < width; y++) {
                     for (int x = 0; x < width; x++) {
                         System.out.format("[%s%d%d]", y, x, z);
-                        add(shape.mask[y][x], x, y, z, data);
+                        add(shape.isTaken(x, y), x, y, z, data);
                         System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
                     }
                     System.out.println();

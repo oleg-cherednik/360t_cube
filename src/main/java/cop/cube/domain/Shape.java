@@ -12,13 +12,14 @@ import java.util.Set;
  * @author Oleg Cherednik
  * @since 11.04.2018
  */
+@SuppressWarnings("MethodCanBeVariableArityMethod")
 public final class Shape {
 
     public static final Shape NULL = new Shape('\0', Direction.UP, null);
 
     private final char name;
     private final Direction direction;
-    public final boolean[][] mask;
+    private final boolean[][] mask;
 
     public static Shape create(char name, String data, char marker) {
         if (data == null || data.trim().isEmpty()) {
@@ -59,6 +60,24 @@ public final class Shape {
 
     public char getName() {
         return name;
+    }
+
+    public boolean isTaken(int x, int y) {
+        return mask != null && mask[y][x];
+    }
+
+    public boolean[][] getMask() {
+        int width = getWidth();
+
+        if (width == 0)
+            return null;
+
+        boolean[][] res = new boolean[width][];
+
+        for (int y = 0; y < width; y++)
+            res[y] = Arrays.copyOf(mask[y], width);
+
+        return res;
     }
 
     public Set<Direction> getUniqueDirections() {
