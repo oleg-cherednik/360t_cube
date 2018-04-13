@@ -23,6 +23,11 @@ public final class CubeForm {
         if (width == 0)
             return;
 
+        printLine1(out);
+        printLine2(out);
+        printLine3(out);
+        printLine4(out);
+
         for (int y = 0; y < 4; y++) {
 
 //            for(int i = 0; i < width; i++) {
@@ -43,6 +48,22 @@ public final class CubeForm {
 
             out.print("\n");
         }
+    }
+
+    private void printLine1(PrintStream out) {
+
+    }
+
+    private void printLine2(PrintStream out) {
+
+    }
+
+    private void printLine3(PrintStream out) {
+
+    }
+
+    private void printLine4(PrintStream out) {
+
     }
 
     private static int getWidth(Map<Cube.Side, boolean[][]> sides) {
