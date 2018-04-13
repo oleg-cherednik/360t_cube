@@ -3,11 +3,13 @@ package cop.cube;
 import cop.cube.domain.Cube;
 import cop.cube.domain.Shape;
 import cop.cube.exceptions.CubeException;
+import cop.cube.print.CubeForm;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -63,6 +65,11 @@ public final class CubeGame {
         return totalSolution;
     }
 
+    public List<Cube> getFoundSolutions() {
+        findAllSolutions();
+        return Collections.unmodifiableList(cubes);
+    }
+
     private void solve(Cube cube, Set<Shape> shapes, boolean useRelated) {
         if (shapes.isEmpty() && cube.isComplete()) {
             cubes.add(cube.clone());
@@ -100,6 +107,13 @@ public final class CubeGame {
         CubeGame cubeGame = create(shapes);
         int totalSolution = cubeGame.findAllSolutions();
         System.out.println("Total " + totalSolution + " found");
+
+        if (totalSolution > 0) {
+            Cube cube = cubeGame.getFoundSolutions().iterator().next();
+            Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
+
+            CubeForm.INSTANCE.print(sides, MARKER, System.out);
+        }
     }
 
     private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("o.o.o\nooooo\n.ooo.\nooooo\no.o.o", MARKER));

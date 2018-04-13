@@ -2,8 +2,11 @@ package cop.cube.domain;
 
 import cop.cube.exceptions.CubeException;
 
+import java.util.Collections;
 import java.util.Deque;
+import java.util.EnumMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * <pre>
@@ -44,7 +47,7 @@ public final class Cube implements Cloneable {
 
     private final int width;
     private final char[][][] data;
-    public final Deque<Shape> shapes = new LinkedList<>();
+    private final Deque<Shape> shapes = new LinkedList<>();
 
     private Side side = Side.SIDE_1;
 
@@ -98,55 +101,16 @@ public final class Cube implements Cloneable {
         return Side.isAllCompleted(data);
     }
 
-    public String print(char marker) {
-        boolean[][] mask1 = Side.SIDE_1.mask(data);
-        boolean[][] mask2 = Side.SIDE_2.mask(data);
-        boolean[][] mask3 = Side.SIDE_3.mask(data);
-        boolean[][] mask4 = Side.SIDE_4.mask(data);
-        boolean[][] mask5 = Side.SIDE_5.mask(data);
-        boolean[][] mask6 = Side.SIDE_6.mask(data);
+    public Map<Side, boolean[][]> getSideMask() {
+        Map<Side, boolean[][]> map = new EnumMap<>(Side.class);
 
-        StringBuilder buf = new StringBuilder();
+        for (Side side : Side.values())
+            map.put(side, side.mask(data));
 
-        for (int i = 0; i < width; i++) {
-            if (buf.length() > 0)
-                buf.append('\n');
-
-            buf.append(' ');
-
-            for (boolean r : mask1[i])
-                buf.append(r ? marker : ' ');
-
-            buf.append(' ');
-
-            for (boolean r : mask2[i])
-                buf.append(r ? marker : ' ');
-
-            buf.append(' ');
-
-            for (boolean r : mask3[i])
-                buf.append(r ? marker : ' ');
-
-            buf.append(' ');
-
-            for (boolean r : mask4[i])
-                buf.append(r ? marker : ' ');
-
-            buf.append(' ');
-
-            for (boolean r : mask5[i])
-                buf.append(r ? marker : ' ');
-
-            buf.append(' ');
-
-            for (boolean r : mask6[i])
-                buf.append(r ? marker : ' ');
-        }
-
-        return buf.toString();
+        return Collections.unmodifiableMap(map);
     }
 
-    private enum Side {
+    public enum Side {
         SIDE_1('1') {
             @Override
             protected boolean isCompleted(char[][][] data) {

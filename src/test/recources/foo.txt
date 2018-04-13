@@ -1,49 +1,48 @@
 A - orange
-..o..
-.ooo.
+o.o.o
 ooooo
 .ooo.
-..o..
+ooooo
+o.o.o
 
 B - red
-oo.oo
-.ooo.
-ooooo
-.ooo.
-oo.oo
+.o.o.
+.oooo
+oooo.
+.oooo
+oo.o.
 
 C - blue
 ..o..
-.oooo
-oooo.
-.oooo
-..o..
-
-D - yellow
-oo.oo
-oooo.
-.oooo
-oooo.
+.ooo.
+ooooo
+.ooo.
 .o.o.
 
+D - yellow
+.o.o.
+oooo.
+.oooo
+oooo.
+oo.oo
+
 E - magenta
-o.o..
+..o..
 ooooo
 .ooo.
 ooooo
-.o.o.
+.o.oo
 
 F - green
-.o.o.
-oooo.
-.oooo
-oooo.
-oo.o.
+..o..
+.ooo.
+ooooo
+.ooo.
+..o..
 
-
-1 - A-UP
-2 - E-UP
-3 - B-UP
-4 - F-UP
-5 - D-UP
-6 - C-UP
+1 - A-RIGHT-OFF
+2 - B-UP-OFF
+3 - F-UP-OFF
+4 - C-LEFT-OFF
+5 - D-LEFT-OFF
+6 - E-RIGHT-OFF
