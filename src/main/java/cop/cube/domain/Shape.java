@@ -1,7 +1,5 @@
 package cop.cube.domain;
 
-import cop.cube.exceptions.CubeException;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,28 +18,6 @@ public final class Shape {
     private final char name;
     private final Direction direction;
     private final boolean[][] mask;
-
-    public static Shape create(char name, String data, char marker) {
-        if (data == null || data.trim().isEmpty()) {
-            return NULL;
-        }
-
-        String[] rows = data.split("\n");
-        int width = rows.length;
-        boolean[][] mask = new boolean[width][width];
-
-        for (int i = 0; i < width; i++) {
-            String row = rows[i];
-
-            if (row.length() != width)
-                throw new CubeException("Shape should be a square");
-
-            for (int j = 0; j < width; j++)
-                mask[i][j] = row.charAt(j) == marker;
-        }
-
-        return new Shape(name, Direction.UP, mask);
-    }
 
     public static Shape create(char name, Direction direction, boolean[][] mask) {
         return mask != null && mask.length > 0 ? new Shape(name, direction, mask) : NULL;
@@ -81,36 +57,27 @@ public final class Shape {
     }
 
     public Set<Direction> getUniqueDirections() {
-        if (mask == null) {
+        if (this == NULL)
             return Collections.emptySet();
-        }
 
-        int up = getSide(Direction.UP);
-        int right = getSide(Direction.RIGHT);
-        int down = getSide(Direction.DOWN);
-        int left = getSide(Direction.LEFT);
+        int up = Direction.UP.side(mask);
+        int right = Direction.RIGHT.side(mask);
+        int down = Direction.DOWN.side(mask);
+        int left = Direction.LEFT.side(mask);
 
         Set<Direction> directions = new LinkedHashSet<>();
         Set<Integer> sides = new HashSet<>();
 
-        if (sides.add(up)) {
+        if (sides.add(up))
             directions.add(Direction.UP);
-        }
-        if (sides.add(right)) {
+        if (sides.add(right))
             directions.add(Direction.RIGHT);
-        }
-        if (sides.add(down)) {
+        if (sides.add(down))
             directions.add(Direction.DOWN);
-        }
-        if (sides.add(left)) {
+        if (sides.add(left))
             directions.add(Direction.LEFT);
-        }
 
         return directions;
-    }
-
-    public int getSide(Direction direction) {
-        return direction.getSide(mask);
     }
 
     public Shape rotateRight() {

@@ -10,48 +10,48 @@ import java.util.function.Function;
 public enum Direction {
     UP(shape -> shape) {
         @Override
-        public int getSide(boolean[][] mask) {
+        public int side(boolean[][] mask) {
+            final int width = width(mask);
             int side = 0;
 
-            for (int i = 0; i < mask.length; i++)
-                if (mask[0][i])
-                    side |= 1 << (i + 1);
+            for (int i = 0; i < width; i++)
+                side |= bit(i, mask[0][i]);
 
             return side;
         }
     },
     RIGHT(Shape::rotateRight) {
         @Override
-        public int getSide(boolean[][] mask) {
+        public int side(boolean[][] mask) {
+            final int width = width(mask);
             int side = 0;
 
-            for (int i = 0, j = mask.length - 1; i < mask.length; i++, j--)
-                if (mask[j][0])
-                    side |= 1 << (i + 1);
+            for (int i = 0, j = width - 1; i < width; i++, j--)
+                side |= bit(i, mask[j][0]);
 
             return side;
         }
     },
     DOWN(shape -> shape.rotateRight().rotateRight()) {
         @Override
-        public int getSide(boolean[][] mask) {
+        public int side(boolean[][] mask) {
+            final int width = width(mask);
             int side = 0;
 
-            for (int i = 0, j = mask.length - 1; i < mask.length; i++, j--)
-                if (mask[mask.length - 1][j])
-                    side |= 1 << (i + 1);
+            for (int i = 0, j = width - 1; i < width; i++, j--)
+                side |= bit(i, mask[width - 1][j]);
 
             return side;
         }
     },
     LEFT(shape -> shape.rotateRight().rotateRight().rotateRight()) {
         @Override
-        public int getSide(boolean[][] mask) {
+        public int side(boolean[][] mask) {
+            final int width = width(mask);
             int side = 0;
 
-            for (int i = 0; i < mask.length; i++)
-                if (mask[i][mask.length - 1])
-                    side |= 1 << (i + 1);
+            for (int i = 0; i < width; i++)
+                side |= bit(i, mask[i][width - 1]);
 
             return side;
         }
@@ -67,5 +67,13 @@ public enum Direction {
         return rotate;
     }
 
-    public abstract int getSide(boolean[][] mask);
+    protected static int width(boolean[][] mask) {
+        return mask.length;
+    }
+
+    protected static int bit(int i, boolean taken) {
+        return taken ? 1 << (i + 1) : 0x0;
+    }
+
+    public abstract int side(boolean[][] mask);
 }

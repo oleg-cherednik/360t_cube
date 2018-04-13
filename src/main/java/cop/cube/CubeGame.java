@@ -4,6 +4,7 @@ import cop.cube.domain.Cube;
 import cop.cube.domain.Direction;
 import cop.cube.domain.Shape;
 import cop.cube.domain.ShapeSet;
+import cop.cube.exceptions.CubeException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,14 +17,14 @@ import java.util.function.Supplier;
  * @author Oleg Cherednik
  * @since 11.04.2018
  */
-public class CubeGame {
+public final class CubeGame {
 
     private static final char MARKER = 'o';
 
     private final ShapeSet shapeSet;
     private int totalSolution = -1;
 
-    public CubeGame(ShapeSet shapeSet) {
+    private CubeGame(ShapeSet shapeSet) {
         this.shapeSet = shapeSet != null ? shapeSet : ShapeSet.NULL;
     }
 
@@ -50,6 +51,7 @@ public class CubeGame {
             }
         } else {
             Shape shape = shapes.remove();
+            boolean[][] mask = shape.getMask();
 
             for (Direction direction : shape.getUniqueDirections()) {
                 Shape rotatedShape = direction.rotate().apply(Shape.create(shape.getName(), direction, shape.getMask()));
@@ -75,11 +77,32 @@ public class CubeGame {
 
     }
 
-    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', "..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER);
-    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', "oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER);
-    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', "..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER);
-    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', "oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER);
-    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', "o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER);
-    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', ".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER);
+    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', Direction.UP, convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
+    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', Direction.UP, convert("oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER));
+    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', Direction.UP, convert("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER));
+    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', Direction.UP, convert("oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', Direction.UP, convert("o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', Direction.UP, convert(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER));
+
+    private static boolean[][] convert(String data, char marker) {
+        if (data == null || data.trim().isEmpty() || marker == '\0')
+            return null;
+
+        String[] rows = data.split("\n");
+        int width = rows.length;
+        boolean[][] mask = new boolean[width][width];
+
+        for (int i = 0; i < width; i++) {
+            String row = rows[i];
+
+            if (row.length() != width)
+                throw new CubeException("Shape should be a square");
+
+            for (int j = 0; j < width; j++)
+                mask[i][j] = row.charAt(j) == marker;
+        }
+
+        return mask;
+    }
 
 }
