@@ -44,14 +44,12 @@ public final class CubeGame {
 
     private void solve(Cube cube, Set<Shape> availableShapes) {
         if (availableShapes.isEmpty()) {
-            System.out.println(cube.print(MARKER));
-            System.out.println();
             if (cube.isComplete())
                 cubes.add(cube.clone());
         } else {
-            if(cube.shapes.size() == 5) {
+            if (cube.shapes.size() == 5) {
                 List<Shape> aa = new ArrayList<>(cube.shapes);
-                if(aa.get(0).toString().equals("A-" + Direction.RIGHT + '-' + Mirror.OFF)
+                if (aa.get(0).toString().equals("A-" + Direction.RIGHT + '-' + Mirror.OFF)
                         && aa.get(1).toString().equals("B-" + Direction.UP + '-' + Mirror.OFF)
                         && aa.get(2).toString().equals("F-" + Direction.UP + '-' + Mirror.OFF)
                         && aa.get(3).toString().equals("C-" + Direction.LEFT + '-' + Mirror.OFF)
@@ -61,30 +59,16 @@ public final class CubeGame {
                 }
             }
             for (Shape shape : availableShapes) {
-                List<Shape> relatedShapes = shape.getRelatedShapes();
-
-                int aaa = 0;
-                aaa++;
-
-                for (Shape sh : relatedShapes) {
+                for (Shape sh : shape.getRelatedShapes()) {
                     if (cube.addNextSide(sh)) {
-
-                        System.out.println();
-
                         Set<Shape> aa = new LinkedHashSet<>(availableShapes);
                         aa.remove(shape);
 
-                        solve(cube, Collections.unmodifiableSet(aa));
+                        solve(cube, aa.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(aa));
                         cube.removeCurrentSide();
-                    } else {
-//                    System.out.println(cube.print(MARKER));
-//                    System.out.println();
                     }
                 }
             }
-
-            int a = 0;
-            a++;
         }
     }
 
