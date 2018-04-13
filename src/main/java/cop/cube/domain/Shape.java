@@ -32,13 +32,11 @@ public final class Shape {
         for (int i = 0; i < width; i++) {
             String row = rows[i];
 
-            if (row.length() != width) {
+            if (row.length() != width)
                 throw new CubeException("Shape should be a square");
-            }
 
-            for (int j = 0; j < width; j++) {
+            for (int j = 0; j < width; j++)
                 mask[i][j] = row.charAt(j) == marker;
-            }
         }
 
         return new Shape(name, Direction.UP, mask);

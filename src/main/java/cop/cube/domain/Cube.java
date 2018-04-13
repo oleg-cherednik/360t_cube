@@ -2,8 +2,6 @@ package cop.cube.domain;
 
 import cop.cube.exceptions.CubeException;
 
-import java.util.function.Predicate;
-
 /**
  * <pre>
  *                             side:4
@@ -52,59 +50,17 @@ public final class Cube {
     private Side side = Side.SIDE_1;
 
     public boolean addNext(Shape shape) {
-        if (width != shape.getWidth()) {
+        if (width != shape.getWidth())
             throw new CubeException("Shape's width does not match with cube's width");
-        }
 
-        if (side == Side.SIDE_1) {
-            if (addSide1(shape)) {
-                side = Side.SIDE_2;
-                return true;
-            }
-            return false;
-        }
+        boolean res = side.add(shape, data);
 
-        if (side == Side.SIDE_2) {
-            if (addSide2(shape)) {
-                side = Side.SIDE_3;
-                return true;
-            }
-            return false;
-        }
+        if (res)
+            side = side.next();
+        else
+            side.clear(data);
 
-        if (side == Side.SIDE_3) {
-            if (addSide3(shape)) {
-                side = Side.SIDE_4;
-                return true;
-            }
-            return false;
-        }
-
-        if (side == Side.SIDE_4) {
-            if (addSide4(shape)) {
-                side = Side.SIDE_5;
-                return true;
-            }
-            return false;
-        }
-
-        if (side == Side.SIDE_5) {
-            if (addSide5(shape)) {
-                side = Side.SIDE_6;
-                return true;
-            }
-            return false;
-        }
-
-        if (side == Side.SIDE_6) {
-            if (addSide6(shape)) {
-                side = Side.SIDE_1;
-                return true;
-            }
-            return false;
-        }
-
-        return true;
+        return res;
     }
 
     public void removeCurrentSide() {
@@ -112,209 +68,14 @@ public final class Cube {
     }
 
     public boolean isComplete() {
-        for (Side side : Side.values())
-            if (!side.isComplete(data))
-                return false;
-        return true;
-    }
-
-    private boolean addSide1(Shape shape) {
-        System.out.println("side:1");
-
-        final int z = 0;
-
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < width; x++) {
-                System.out.format("[%s%d%d]", y, x, z);
-                if (shape.mask[y][x]) {
-                    if (data[y][x][z] == '\0' || data[y][x][z] == '1') {
-                        data[y][x][z] = '1';
-                    } else {
-                        // clear
-                        for (int ii = 0; ii < width; ii++) {
-                            for (int jj = 0; jj < width; jj++) {
-                                if (data[ii][jj][z] == '\0' || data[ii][jj][z] == '1') {
-                                    data[ii][jj][z] = '\0';
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                }
-                System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-            }
-            System.out.println();
-        }
-
-        return true;
-    }
-
-    private boolean addSide2(Shape shape) {
-        System.out.println("side:2");
-
-        final int x = 0;
-
-        for (int y = 0; y < width; y++) {
-            for (int z = width - 1; z >= 0; z--) {
-                System.out.format("[%s%d%d]", y, x, z);
-                if (shape.mask[y][z]) {
-                    if (data[y][x][z] == '\0' || data[y][x][z] == '2') {
-                        data[y][x][z] = '2';
-                    } else {
-                        // clear
-                        for (int ii = 0; ii < width; ii++) {
-                            for (int jj = 0; jj < width; jj++) {
-                                if (data[ii][x][width - jj - 1] == '\0' || data[ii][x][width - jj - 1] == '2') {
-                                    data[ii][x][width - jj - 1] = '\0';
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                }
-                System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-            }
-            System.out.println();
-        }
-
-        return true;
-    }
-
-    private boolean addSide3(Shape shape) {
-        System.out.println("side:3");
-
-        final int y = width - 1;
-
-        for (int z = 0; z < width; z++) {
-            for (int x = 0; x < width; x++) {
-                System.out.format("[%s%d%d]", y, x, z);
-                if (shape.mask[z][x]) {
-                    if (data[y][x][z] == '\0' || data[y][x][z] == '3') {
-                        data[y][x][z] = '3';
-                    } else {
-                        // clear
-                        for (int ii = 0; ii < width; ii++) {
-                            for (int jj = 0; jj < width; jj++) {
-                                if (data[y][jj][ii] == '\0' || data[y][jj][ii] == '3') {
-                                    data[y][jj][ii] = '\0';
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                }
-                System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-            }
-            System.out.println();
-        }
-
-        return true;
-    }
-
-    private boolean addSide4(Shape shape) {
-        System.out.println("side:4");
-
-        final int y = 0;
-
-        for (int z = width - 1; z >= 0; z--) {
-            for (int x = 0; x < width; x++) {
-                System.out.format("[%s%d%d]", y, x, z);
-                if (shape.mask[z][x]) {
-                    if (data[y][x][z] == '\0' || data[y][x][z] == '4') {
-                        data[y][x][z] = '4';
-                    } else {
-                        // clear
-                        for (int ii = 0; ii < width; ii++) {
-                            for (int jj = 0; jj < width; jj++) {
-                                if (data[y][jj][ii] == '\0' || data[y][jj][ii] == '4') {
-                                    data[y][jj][ii] = '\0';
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                }
-                System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-            }
-            System.out.println();
-        }
-
-        return true;
-    }
-
-    private boolean addSide5(Shape shape) {
-        System.out.println("side:5");
-
-        final int x = width - 1;
-
-        for (int y = 0; y < width; y++) {
-            for (int z = 0; z < width; z++) {
-                System.out.format("[%s%d%d]", y, x, z);
-                if (shape.mask[y][z]) {
-                    if (data[y][x][z] == '\0' || data[y][x][z] == '5') {
-                        data[y][x][z] = '5';
-                    } else {
-                        // clear
-                        for (int ii = 0; ii < width; ii++) {
-                            for (int jj = 0; jj < width; jj++) {
-                                if (data[ii][x][width - jj - 1] == '\0' || data[ii][x][width - jj - 1] == '5') {
-                                    data[ii][x][width - jj - 1] = '\0';
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                }
-                System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-            }
-            System.out.println();
-        }
-
-        return true;
-    }
-
-    private boolean addSide6(Shape shape) {
-        System.out.println("side:6");
-
-        final int z = 4;
-
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < width; x++) {
-                System.out.format("[%s%d%d]", y, x, z);
-                if (shape.mask[y][x]) {
-                    if (data[y][x][z] == '\0' || data[y][x][z] == '6') {
-                        data[y][x][z] = '6';
-                    } else {
-                        // clear
-                        for (int ii = 0; ii < width; ii++) {
-                            for (int jj = 0; jj < width; jj++) {
-                                if (data[ii][jj][z] == '\0' || data[ii][jj][z] == '6') {
-                                    data[ii][jj][z] = '\0';
-                                }
-                            }
-                        }
-
-                        return false;
-                    }
-                }
-                System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
-            }
-            System.out.println();
-        }
-
-        return true;
+        return Side.isAllCompleted(data);
     }
 
     private enum Side {
         SIDE_1('1') {
             @Override
-            public boolean isComplete(char[][][] data) {
-                final int width = data.length;
+            protected boolean isCompleted(char[][][] data) {
+                final int width = width(data);
                 final int z = 0;
 
                 for (int y = 0; y < width; y++)
@@ -327,18 +88,42 @@ public final class Cube {
 
             @Override
             public void clear(char[][][] data) {
-                final int width = data.length;
+                final int width = width(data);
                 final int z = 0;
 
                 for (int y = 0; y < width; y++)
                     for (int x = 0; x < width; x++)
-                        data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
+                        clear(x, y, z, data);
+            }
+
+            @Override
+            public Side next() {
+                return SIDE_2;
+            }
+
+            @Override
+            public boolean add(Shape shape, char[][][] data) {
+                System.out.println("side:1");
+
+                final int width = width(data);
+                final int z = 0;
+
+                for (int y = 0; y < width; y++) {
+                    for (int x = 0; x < width; x++) {
+                        System.out.format("[%s%d%d]", y, x, z);
+                        add(shape.mask[y][x], x, y, z, data);
+                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
+                    }
+                    System.out.println();
+                }
+
+                return true;
             }
         },
         SIDE_2('2') {
             @Override
-            public boolean isComplete(char[][][] data) {
-                final int width = data.length;
+            protected boolean isCompleted(char[][][] data) {
+                final int width = width(data);
                 final int x = 0;
 
                 for (int y = 0; y < width; y++)
@@ -351,19 +136,42 @@ public final class Cube {
 
             @Override
             public void clear(char[][][] data) {
-                final int width = data.length;
+                final int width = width(data);
                 final int x = 0;
 
                 for (int y = 0; y < width; y++)
                     for (int z = width - 1; z >= 0; z--)
-                        if (data[y][x][z] == marker)
-                            data[y][x][z] = '\0';
+                        clear(x, y, z, data);
+            }
+
+            @Override
+            public Side next() {
+                return SIDE_3;
+            }
+
+            @Override
+            public boolean add(Shape shape, char[][][] data) {
+                System.out.println("side:2");
+
+                final int width = width(data);
+                final int x = 0;
+
+                for (int y = 0; y < width; y++) {
+                    for (int z = width - 1; z >= 0; z--) {
+                        System.out.format("[%s%d%d]", y, x, z);
+                        add(shape.mask[y][z], x, y, z, data);
+                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
+                    }
+                    System.out.println();
+                }
+
+                return true;
             }
         },
         SIDE_3('3') {
             @Override
-            public boolean isComplete(char[][][] data) {
-                final int width = data.length;
+            protected boolean isCompleted(char[][][] data) {
+                final int width = width(data);
                 final int y = width - 1;
 
                 for (int z = 0; z < width; z++)
@@ -376,19 +184,42 @@ public final class Cube {
 
             @Override
             public void clear(char[][][] data) {
-                final int width = data.length;
+                final int width = width(data);
                 final int y = width - 1;
 
                 for (int z = 0; z < width; z++)
                     for (int x = 0; x < width; x++)
-                        if (data[y][x][z] == marker)
-                            data[y][x][z] = '\0';
+                        clear(x, y, z, data);
+            }
+
+            @Override
+            public Side next() {
+                return SIDE_4;
+            }
+
+            @Override
+            public boolean add(Shape shape, char[][][] data) {
+                System.out.println("side:3");
+
+                final int width = width(data);
+                final int y = width - 1;
+
+                for (int z = 0; z < width; z++) {
+                    for (int x = 0; x < width; x++) {
+                        System.out.format("[%s%d%d]", y, x, z);
+                        add(shape.mask[z][x], x, y, z, data);
+                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
+                    }
+                    System.out.println();
+                }
+
+                return true;
             }
         },
         SIDE_4('4') {
             @Override
-            public boolean isComplete(char[][][] data) {
-                final int width = data.length;
+            protected boolean isCompleted(char[][][] data) {
+                final int width = width(data);
                 final int y = 0;
 
                 for (int z = width - 1; z >= 0; z--)
@@ -398,11 +229,45 @@ public final class Cube {
 
                 return true;
             }
+
+            @Override
+            public void clear(char[][][] data) {
+                final int width = width(data);
+                final int y = 0;
+
+                for (int z = width - 1; z >= 0; z--)
+                    for (int x = 0; x < width; x++)
+                        clear(x, y, z, data);
+            }
+
+            @Override
+            public Side next() {
+                return SIDE_5;
+            }
+
+            @Override
+            public boolean add(Shape shape, char[][][] data) {
+                System.out.println("side:4");
+
+                final int width = width(data);
+                final int y = 0;
+
+                for (int z = width - 1; z >= 0; z--) {
+                    for (int x = 0; x < width; x++) {
+                        System.out.format("[%s%d%d]", y, x, z);
+                        add(shape.mask[z][x], x, y, z, data);
+                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
+                    }
+                    System.out.println();
+                }
+
+                return true;
+            }
         },
         SIDE_5('5') {
             @Override
-            public boolean isComplete(char[][][] data) {
-                final int width = data.length;
+            protected boolean isCompleted(char[][][] data) {
+                final int width = width(data);
                 final int x = width - 1;
 
                 for (int y = 0; y < width; y++)
@@ -412,17 +277,85 @@ public final class Cube {
 
                 return true;
             }
+
+            @Override
+            public void clear(char[][][] data) {
+                final int width = width(data);
+                final int x = width - 1;
+
+                for (int y = 0; y < width; y++)
+                    for (int z = 0; z < width; z++)
+                        clear(x, y, z, data);
+            }
+
+            @Override
+            public Side next() {
+                return SIDE_6;
+            }
+
+            @Override
+            public boolean add(Shape shape, char[][][] data) {
+                System.out.println("side:5");
+
+                final int width = width(data);
+                final int x = width - 1;
+
+                for (int y = 0; y < width; y++) {
+                    for (int z = 0; z < width; z++) {
+                        System.out.format("[%s%d%d]", y, x, z);
+                        add(shape.mask[y][z], x, y, z, data);
+                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
+                    }
+                    System.out.println();
+                }
+
+                return true;
+            }
         },
         SIDE_6('6') {
             @Override
-            public boolean isComplete(char[][][] data) {
-                final int width = data.length;
-                final int z = 4;
+            protected boolean isCompleted(char[][][] data) {
+                final int width = width(data);
+                final int z = width - 1;
 
                 for (int y = 0; y < width; y++)
                     for (int x = 0; x < width; x++)
                         if (data[y][x][z] == '\0')
                             return false;
+
+                return true;
+            }
+
+            @Override
+            public void clear(char[][][] data) {
+                final int width = width(data);
+                final int z = width - 1;
+
+                for (int y = 0; y < width; y++)
+                    for (int x = 0; x < width; x++)
+                        clear(x, y, z, data);
+            }
+
+            @Override
+            public Side next() {
+                return SIDE_6;
+            }
+
+            @Override
+            public boolean add(Shape shape, char[][][] data) {
+                System.out.println("side:6");
+
+                final int width = width(data);
+                final int z = width - 1;
+
+                for (int y = 0; y < width; y++) {
+                    for (int x = 0; x < width; x++) {
+                        System.out.format("[%s%d%d]", y, x, z);
+                        add(shape.mask[y][x], x, y, z, data);
+                        System.out.print(data[y][x][z] == '\0' ? ' ' : data[y][x][z]);
+                    }
+                    System.out.println();
+                }
 
                 return true;
             }
@@ -434,32 +367,41 @@ public final class Cube {
             this.marker = marker;
         }
 
-        public abstract boolean isComplete(char[][][] data);
+        protected abstract boolean isCompleted(char[][][] data);
 
-        public void clear(char[][][] data) {
-            final int width = data.length;
-            for (int ii = 0; ii < width; ii++) {
-                for (int jj = 0; jj < width; jj++) {
-                    if (data[y][jj][ii] == '\0' || data[y][jj][ii] == '3') {
-                        data[y][jj][ii] = '\0';
-                    }
-                }
+        public abstract void clear(char[][][] data);
+
+        public abstract Side next();
+
+        public boolean add(Shape shape, char[][][] data) {
+            return true;
+        }
+
+        protected final void clear(int x, int y, int z, char[][][] data) {
+            data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
+        }
+
+        protected final int width(char[][][] data) {
+            return data.length;
+        }
+
+        protected final boolean add(boolean taken, int x, int y, int z, char[][][] data) {
+            if (taken) {
+                if (data[y][x][z] != '\0' && data[y][x][z] != marker)
+                    return false;
+
+                data[y][x][z] = marker;
             }
+
+            return true;
         }
 
-        public boolean add(Shape shape, boolean[][][] data) {
-
-            return false;
+        public static boolean isAllCompleted(char[][][] data) {
+            for (Side side : values())
+                if (!side.isCompleted(data))
+                    return false;
+            return true;
         }
-
     }
-
-    private Predicate<Shape> IS_VALID_1 = new Predicate<Shape>() {
-        @Override
-        public boolean test(Shape shape) {
-
-            return false;
-        }
-    };
 
 }

@@ -44,9 +44,8 @@ public class CubeGame {
 
     private static void foo(Cube cube, Queue<Shape> shapes, List<Cube> cubes) {
         if (shapes.isEmpty()) {
-            if (cube.isComplete())
-            // TODO copy
-            {
+            if (cube.isComplete()) {
+                // TODO copy
                 cubes.add(cube);
             }
         } else {
