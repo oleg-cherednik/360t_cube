@@ -3,7 +3,6 @@ package cop.cube.domain;
 import cop.cube.exceptions.CubeException;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
  * @author Oleg Cherednik
  * @since 11.04.2018
  */
-public final class ShapeSet implements Iterable<Shape> {
+public final class ShapeSet {
 
     public static final ShapeSet NULL = new ShapeSet(Collections.emptySet());
     private static final int TOTAL = 6;
@@ -25,13 +24,6 @@ public final class ShapeSet implements Iterable<Shape> {
     private final int width;
 
     public static ShapeSet create(List<Supplier<Shape>> shapeSuppliers) {
-        for(Supplier<Shape> supplier : shapeSuppliers) {
-            Shape shape = supplier.get();
-
-            int a = 0;
-            a++;
-        }
-
         Set<Shape> shapes = Optional.ofNullable(shapeSuppliers).orElse(Collections.emptyList()).stream()
                                     .filter(Objects::nonNull)
                                     .map(Supplier::get)
@@ -68,10 +60,5 @@ public final class ShapeSet implements Iterable<Shape> {
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
     public Set<Shape> getShapes() {
         return shapes;
-    }
-
-    @Override
-    public Iterator<Shape> iterator() {
-        return shapes.iterator();
     }
 }

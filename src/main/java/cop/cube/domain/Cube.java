@@ -4,28 +4,28 @@ import cop.cube.exceptions.CubeException;
 
 /**
  * <pre>
- *                             hash:4
+ *                             side:4
  *                             [004][014][024][034][044]
  *                             [003][013][023][033][043]
  *                             [002][012][022][032][042]
  *                             [001][011][021][031][041]
  *                             [000][010][020][030][040]
  *
- * hash:2                      hash:1                      hash:5
+ * side:2                      side:1                      side:5
  * [004][003][002][001][000]   [000][010][020][030][040]   [040][041][042][043][044]
  * [104][103][102][101][100]   [100][110][120][130][140]   [140][141][142][143][144]
  * [204][203][202][201][200]   [200][210][220][230][240]   [240][241][242][243][244]
  * [304][303][302][301][300]   [300][310][320][330][340]   [340][341][342][343][344]
  * [404][403][402][401][400]   [400][410][420][430][440]   [440][441][442][443][444]
  *
- *                             hash:3
+ *                             side:3
  *                             [400][410][420][430][440]
  *                             [401][411][421][431][441]
  *                             [402][412][422][432][442]
  *                             [403][413][423][433][443]
  *                             [404][414][424][434][444]
  *
- *                             hash:6
+ *                             side:6
  *                             [004][014][024][034][044]
  *                             [104][114][124][134][144]
  *                             [204][214][224][234][244]
@@ -78,12 +78,37 @@ public final class Cube implements Cloneable {
     }
 
     public void removeCurrentSide() {
+        if (side != Side.SIDE_1 && side != Side.SIDE_6)
+            side = side.previous();
+
         side.clear(data);
-        side = side.previous();
     }
 
     public boolean isComplete() {
         return Side.isAllCompleted(data);
+    }
+
+    public String print(char marker) {
+        int i = 0;
+        StringBuilder buf = new StringBuilder();
+
+        for (Side side : Side.values()) {
+            i++;
+            boolean[][] mask = side.mask(data);
+
+            if (buf.length() > 0)
+                buf.append('\n');
+
+            buf.append("side:").append(i).append('\n');
+
+            for (int y = 0; y < width; y++) {
+                for (int x = 0; x < width; x++)
+                    buf.append(mask[y][x] ? marker : ' ');
+                buf.append('\n');
+            }
+        }
+
+        return buf.toString();
     }
 
     private enum Side {
@@ -128,9 +153,28 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int x = 0; x < width; x++)
-                        add(shape.isTaken(x, y), x, y, z, data);
+                        if (!add(shape.isTaken(x, y), x, y, z, data))
+                            return false;
 
                 return true;
+            }
+
+            @Override
+            public boolean[][] mask(char[][][] data) {
+                boolean[][] mask = null;
+
+                if (data != null) {
+                    final int width = width(data);
+                    final int z = 0;
+
+                    mask = new boolean[width][width];
+
+                    for (int y = 0; y < width; y++)
+                        for (int x = 0; x < width; x++)
+                            mask[y][x] = data[y][x][z] == marker;
+                }
+
+                return mask;
             }
         },
         SIDE_2('2') {
@@ -174,9 +218,28 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int z = width - 1; z >= 0; z--)
-                        add(shape.isTaken(z, y), x, y, z, data);
+                        if (!add(shape.isTaken(z, y), x, y, z, data))
+                            return false;
 
                 return true;
+            }
+
+            @Override
+            public boolean[][] mask(char[][][] data) {
+                boolean[][] mask = null;
+
+                if (data != null) {
+                    final int width = width(data);
+                    final int x = 0;
+
+                    mask = new boolean[width][width];
+
+                    for (int y = 0; y < width; y++)
+                        for (int z = width - 1; z >= 0; z--)
+                            mask[y][z] = data[y][x][z] == marker;
+                }
+
+                return mask;
             }
         },
         SIDE_3('3') {
@@ -220,9 +283,28 @@ public final class Cube implements Cloneable {
 
                 for (int z = 0; z < width; z++)
                     for (int x = 0; x < width; x++)
-                        add(shape.isTaken(x, z), x, y, z, data);
+                        if (!add(shape.isTaken(x, z), x, y, z, data))
+                            return false;
 
                 return true;
+            }
+
+            @Override
+            public boolean[][] mask(char[][][] data) {
+                boolean[][] mask = null;
+
+                if (data != null) {
+                    final int width = width(data);
+                    final int y = width - 1;
+
+                    mask = new boolean[width][width];
+
+                    for (int z = 0; z < width; z++)
+                        for (int x = 0; x < width; x++)
+                            mask[z][x] = data[y][x][z] == marker;
+                }
+
+                return mask;
             }
         },
         SIDE_4('4') {
@@ -266,9 +348,28 @@ public final class Cube implements Cloneable {
 
                 for (int z = width - 1; z >= 0; z--)
                     for (int x = 0; x < width; x++)
-                        add(shape.isTaken(x, z), x, y, z, data);
+                        if (!add(shape.isTaken(x, z), x, y, z, data))
+                            return false;
 
                 return true;
+            }
+
+            @Override
+            public boolean[][] mask(char[][][] data) {
+                boolean[][] mask = null;
+
+                if (data != null) {
+                    final int width = width(data);
+                    final int y = 0;
+
+                    mask = new boolean[width][width];
+
+                    for (int z = width - 1; z >= 0; z--)
+                        for (int x = 0; x < width; x++)
+                            mask[z][x] = data[y][x][z] == marker;
+                }
+
+                return mask;
             }
         },
         SIDE_5('5') {
@@ -312,9 +413,28 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int z = 0; z < width; z++)
-                        add(shape.isTaken(z, y), x, y, z, data);
+                        if (!add(shape.isTaken(z, y), x, y, z, data))
+                            return false;
 
                 return true;
+            }
+
+            @Override
+            public boolean[][] mask(char[][][] data) {
+                boolean[][] mask = null;
+
+                if (data != null) {
+                    final int width = width(data);
+                    final int x = width - 1;
+
+                    mask = new boolean[width][width];
+
+                    for (int y = 0; y < width; y++)
+                        for (int z = 0; z < width; z++)
+                            mask[y][z] = data[y][x][z] == marker;
+                }
+
+                return mask;
             }
         },
         SIDE_6('6') {
@@ -358,9 +478,28 @@ public final class Cube implements Cloneable {
 
                 for (int y = 0; y < width; y++)
                     for (int x = 0; x < width; x++)
-                        add(shape.isTaken(x, y), x, y, z, data);
+                        if (!add(shape.isTaken(x, y), x, y, z, data))
+                            return false;
 
                 return true;
+            }
+
+            @Override
+            public boolean[][] mask(char[][][] data) {
+                boolean[][] mask = null;
+
+                if (data != null) {
+                    final int width = width(data);
+                    final int z = width - 1;
+
+                    mask = new boolean[width][width];
+
+                    for (int y = 0; y < width; y++)
+                        for (int x = 0; x < width; x++)
+                            mask[y][x] = data[y][x][z] == marker;
+                }
+
+                return mask;
             }
         };
 
@@ -378,9 +517,9 @@ public final class Cube implements Cloneable {
 
         public abstract Side previous();
 
-        public boolean add(Shape shape, char[][][] data) {
-            return true;
-        }
+        public abstract boolean add(Shape shape, char[][][] data);
+
+        public abstract boolean[][] mask(char[][][] data);
 
         protected final void clear(int x, int y, int z, char[][][] data) {
             data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];

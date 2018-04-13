@@ -32,34 +32,33 @@ public final class CubeGame {
     public int findAllSolutions() {
         if (totalSolution == -1) {
             Cube cube = new Cube(shapeSet.getWidth());
-            Queue<Shape> shapes = new LinkedList<>(shapeSet.getShapes());
-            foo(cube, shapes);
+            solve(cube, new LinkedList<>(shapeSet.getShapes()));
             totalSolution = cubes.size();
         }
 
         return totalSolution;
     }
 
-    private void foo(Cube cube, Queue<Shape> shapes) {
+    private void solve(Cube cube, Queue<Shape> shapes) {
         if (shapes.isEmpty()) {
-            if (cube.isComplete()) {
+            System.out.println("==========");
+            System.out.println(cube.print(MARKER));
+            System.out.println("==========");
+            if (cube.isComplete())
                 cubes.add(cube.clone());
-            }
         } else {
             for (Shape shape : shapes.remove().getRelatedShapes()) {
                 if (cube.addNext(shape)) {
-                    foo(cube, new LinkedList<>(shapes));
+                    solve(cube, new LinkedList<>(shapes));
                     cube.removeCurrentSide();
                 }
             }
-
-            int a = 0;
-            a++;
         }
     }
 
     public static void main(String... args) {
-        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_E, SHAPE_B, SHAPE_F, SHAPE_D, SHAPE_C);
+//        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_E, SHAPE_B, SHAPE_F, SHAPE_D, SHAPE_C);
+        List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_B, SHAPE_C, SHAPE_D, SHAPE_E, SHAPE_F);
         ShapeSet shapeSet = ShapeSet.create(shapeSuppliers);
         CubeGame cubeGame = new CubeGame(shapeSet);
 
@@ -70,12 +69,19 @@ public final class CubeGame {
 
     }
 
-    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
-    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', convert("oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER));
-    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', convert("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER));
-    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', convert("oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER));
-    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', convert("o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER));
-    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', convert(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER));
+//    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
+//    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', convert("oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER));
+//    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', convert("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER));
+//    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', convert("oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER));
+//    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', convert("o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER));
+//    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', convert(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER));
+
+    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("o.o.o\nooooo\n.ooo.\nooooo\no.o.o", MARKER));
+    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', convert(".o.o.\n.oooo\noooo.\n.oooo\noo.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', convert("..o..\n.ooo.\nooooo\n.ooo.\n.o.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', convert(".o.o.\noooo.\n.oooo\noooo.\noo.oo", MARKER));
+    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', convert("..o..\nooooo\n.ooo.\nooooo\n.o.oo", MARKER));
+    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
 
     private static boolean[][] convert(String data, char marker) {
         if (data == null || data.trim().isEmpty() || marker == '\0')

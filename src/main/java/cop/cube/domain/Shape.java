@@ -81,9 +81,12 @@ public final class Shape {
         return buf.toString();
     }
 
+    private List<Shape> relatedShapes = Collections.emptyList();
+
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
     public List<Shape> getRelatedShapes() {
-        if (this == NULL)
-            return Collections.emptyList();
+        if (this == NULL || !relatedShapes.isEmpty())
+            return relatedShapes;
 
         Set<String> hashes = new HashSet<>();
         List<Shape> shapes = new ArrayList<>();
@@ -99,7 +102,7 @@ public final class Shape {
             }
         }
 
-        return shapes;
+        return relatedShapes = shapes.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(shapes);
     }
 
     static void rotateRight(boolean[][] mask) {
