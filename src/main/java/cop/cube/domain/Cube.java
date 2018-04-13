@@ -38,7 +38,8 @@ import java.util.function.Predicate;
  * @author Oleg Cherednik
  * @since 11.04.2018
  */
-public class Cube {
+@SuppressWarnings("MethodCanBeVariableArityMethod")
+public final class Cube {
 
     private final int width;
     private final char[][][] data;
@@ -111,72 +112,9 @@ public class Cube {
     }
 
     public boolean isComplete() {
-        return isSide1Complete() && isSide2Complete() && isSide3Complete() && isSide4Complete() && isSide5Complete() && isSide6Complete();
-    }
-
-    private boolean isSide1Complete() {
-        final int z = 0;
-
-        for (int y = 0; y < width; y++)
-            for (int x = 0; x < width; x++)
-                if (data[y][x][z] == '\0')
-                    return false;
-
-        return true;
-    }
-
-    private boolean isSide2Complete() {
-        final int x = 0;
-
-        for (int y = 0; y < width; y++)
-            for (int z = width - 1; z >= 0; z--)
-                if (data[y][x][z] == '\0')
-                    return false;
-
-        return true;
-    }
-
-    private boolean isSide3Complete() {
-        final int y = width - 1;
-
-        for (int z = 0; z < width; z++)
-            for (int x = 0; x < width; x++)
-                if (data[y][x][z] == '\0')
-                    return false;
-
-        return true;
-    }
-
-    private boolean isSide4Complete() {
-        final int y = 0;
-
-        for (int z = width - 1; z >= 0; z--)
-            for (int x = 0; x < width; x++)
-                if (data[y][x][z] == '\0')
-                    return false;
-
-        return true;
-    }
-
-    private boolean isSide5Complete() {
-        final int x = width - 1;
-
-        for (int y = 0; y < width; y++)
-            for (int z = 0; z < width; z++)
-                if (data[y][x][z] == '\0')
-                    return false;
-
-        return true;
-    }
-
-    private boolean isSide6Complete() {
-        final int z = 4;
-
-        for (int y = 0; y < width; y++)
-            for (int x = 0; x < width; x++)
-                if (data[y][x][z] == '\0')
-                    return false;
-
+        for (Side side : Side.values())
+            if (!side.isComplete(data))
+                return false;
         return true;
     }
 
@@ -373,12 +311,141 @@ public class Cube {
     }
 
     private enum Side {
-        SIDE_1,
-        SIDE_2,
-        SIDE_3,
-        SIDE_4,
-        SIDE_5,
-        SIDE_6;
+        SIDE_1('1') {
+            @Override
+            public boolean isComplete(char[][][] data) {
+                final int width = data.length;
+                final int z = 0;
+
+                for (int y = 0; y < width; y++)
+                    for (int x = 0; x < width; x++)
+                        if (data[y][x][z] == '\0')
+                            return false;
+
+                return true;
+            }
+
+            @Override
+            public void clear(char[][][] data) {
+                final int width = data.length;
+                final int z = 0;
+
+                for (int y = 0; y < width; y++)
+                    for (int x = 0; x < width; x++)
+                        data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
+            }
+        },
+        SIDE_2('2') {
+            @Override
+            public boolean isComplete(char[][][] data) {
+                final int width = data.length;
+                final int x = 0;
+
+                for (int y = 0; y < width; y++)
+                    for (int z = width - 1; z >= 0; z--)
+                        if (data[y][x][z] == '\0')
+                            return false;
+
+                return true;
+            }
+
+            @Override
+            public void clear(char[][][] data) {
+                final int width = data.length;
+                final int x = 0;
+
+                for (int y = 0; y < width; y++)
+                    for (int z = width - 1; z >= 0; z--)
+                        if (data[y][x][z] == marker)
+                            data[y][x][z] = '\0';
+            }
+        },
+        SIDE_3('3') {
+            @Override
+            public boolean isComplete(char[][][] data) {
+                final int width = data.length;
+                final int y = width - 1;
+
+                for (int z = 0; z < width; z++)
+                    for (int x = 0; x < width; x++)
+                        if (data[y][x][z] == '\0')
+                            return false;
+
+                return true;
+            }
+
+            @Override
+            public void clear(char[][][] data) {
+                final int width = data.length;
+                final int y = width - 1;
+
+                for (int z = 0; z < width; z++)
+                    for (int x = 0; x < width; x++)
+                        if (data[y][x][z] == marker)
+                            data[y][x][z] = '\0';
+            }
+        },
+        SIDE_4('4') {
+            @Override
+            public boolean isComplete(char[][][] data) {
+                final int width = data.length;
+                final int y = 0;
+
+                for (int z = width - 1; z >= 0; z--)
+                    for (int x = 0; x < width; x++)
+                        if (data[y][x][z] == '\0')
+                            return false;
+
+                return true;
+            }
+        },
+        SIDE_5('5') {
+            @Override
+            public boolean isComplete(char[][][] data) {
+                final int width = data.length;
+                final int x = width - 1;
+
+                for (int y = 0; y < width; y++)
+                    for (int z = 0; z < width; z++)
+                        if (data[y][x][z] == '\0')
+                            return false;
+
+                return true;
+            }
+        },
+        SIDE_6('6') {
+            @Override
+            public boolean isComplete(char[][][] data) {
+                final int width = data.length;
+                final int z = 4;
+
+                for (int y = 0; y < width; y++)
+                    for (int x = 0; x < width; x++)
+                        if (data[y][x][z] == '\0')
+                            return false;
+
+                return true;
+            }
+        };
+
+        protected final char marker;
+
+        Side(char marker) {
+            this.marker = marker;
+        }
+
+        public abstract boolean isComplete(char[][][] data);
+
+        public void clear(char[][][] data) {
+            final int width = data.length;
+            for (int ii = 0; ii < width; ii++) {
+                for (int jj = 0; jj < width; jj++) {
+                    if (data[y][jj][ii] == '\0' || data[y][jj][ii] == '3') {
+                        data[y][jj][ii] = '\0';
+                    }
+                }
+            }
+        }
 
         public boolean add(Shape shape, boolean[][][] data) {
 
