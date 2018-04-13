@@ -4,28 +4,28 @@ import cop.cube.exceptions.CubeException;
 
 /**
  * <pre>
- *                             side:4
+ *                             hash:4
  *                             [004][014][024][034][044]
  *                             [003][013][023][033][043]
  *                             [002][012][022][032][042]
  *                             [001][011][021][031][041]
  *                             [000][010][020][030][040]
  *
- * side:2                      side:1                      side:5
+ * hash:2                      hash:1                      hash:5
  * [004][003][002][001][000]   [000][010][020][030][040]   [040][041][042][043][044]
  * [104][103][102][101][100]   [100][110][120][130][140]   [140][141][142][143][144]
  * [204][203][202][201][200]   [200][210][220][230][240]   [240][241][242][243][244]
  * [304][303][302][301][300]   [300][310][320][330][340]   [340][341][342][343][344]
  * [404][403][402][401][400]   [400][410][420][430][440]   [440][441][442][443][444]
  *
- *                             side:3
+ *                             hash:3
  *                             [400][410][420][430][440]
  *                             [401][411][421][431][441]
  *                             [402][412][422][432][442]
  *                             [403][413][423][433][443]
  *                             [404][414][424][434][444]
  *
- *                             side:6
+ *                             hash:6
  *                             [004][014][024][034][044]
  *                             [104][114][124][134][144]
  *                             [204][214][224][234][244]
@@ -37,17 +37,30 @@ import cop.cube.exceptions.CubeException;
  * @since 11.04.2018
  */
 @SuppressWarnings("MethodCanBeVariableArityMethod")
-public final class Cube {
+public final class Cube implements Cloneable {
 
     private final int width;
     private final char[][][] data;
+
+    private Side side = Side.SIDE_1;
 
     public Cube(int width) {
         this.width = width;
         data = new char[width][width][width];
     }
 
-    private Side side = Side.SIDE_1;
+    @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
+    public Cube clone() {
+        Cube cube = new Cube(width);
+
+        for (int z = 0; z < width; z++)
+            for (int y = 0; y < width; y++)
+                for (int x = 0; x < width; x++)
+                    cube.data[y][x][z] = data[y][x][z];
+
+        return cube;
+    }
 
     public boolean addNext(Shape shape) {
         if (width != shape.getWidth())
@@ -64,7 +77,8 @@ public final class Cube {
     }
 
     public void removeCurrentSide() {
-
+        side.clear(data);
+        side = side.previous();
     }
 
     public boolean isComplete() {
@@ -102,8 +116,13 @@ public final class Cube {
             }
 
             @Override
+            public Side previous() {
+                return SIDE_1;
+            }
+
+            @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("side:1");
+                System.out.println("hash:1");
 
                 final int width = width(data);
                 final int z = 0;
@@ -150,8 +169,13 @@ public final class Cube {
             }
 
             @Override
+            public Side previous() {
+                return SIDE_1;
+            }
+
+            @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("side:2");
+                System.out.println("hash:2");
 
                 final int width = width(data);
                 final int x = 0;
@@ -198,8 +222,13 @@ public final class Cube {
             }
 
             @Override
+            public Side previous() {
+                return SIDE_2;
+            }
+
+            @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("side:3");
+                System.out.println("hash:3");
 
                 final int width = width(data);
                 final int y = width - 1;
@@ -246,8 +275,13 @@ public final class Cube {
             }
 
             @Override
+            public Side previous() {
+                return SIDE_3;
+            }
+
+            @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("side:4");
+                System.out.println("hash:4");
 
                 final int width = width(data);
                 final int y = 0;
@@ -294,8 +328,13 @@ public final class Cube {
             }
 
             @Override
+            public Side previous() {
+                return SIDE_4;
+            }
+
+            @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("side:5");
+                System.out.println("hash:5");
 
                 final int width = width(data);
                 final int x = width - 1;
@@ -342,8 +381,13 @@ public final class Cube {
             }
 
             @Override
+            public Side previous() {
+                return SIDE_5;
+            }
+
+            @Override
             public boolean add(Shape shape, char[][][] data) {
-                System.out.println("side:6");
+                System.out.println("hash:6");
 
                 final int width = width(data);
                 final int z = width - 1;
@@ -372,6 +416,8 @@ public final class Cube {
         public abstract void clear(char[][][] data);
 
         public abstract Side next();
+
+        public abstract Side previous();
 
         public boolean add(Shape shape, char[][][] data) {
             return true;

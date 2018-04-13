@@ -1,9 +1,11 @@
 package cop.cube.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,24 +15,34 @@ import java.util.Set;
 @SuppressWarnings("MethodCanBeVariableArityMethod")
 public final class Shape {
 
-    public static final Shape NULL = new Shape('\0', Direction.UP, null);
+    public static final Shape NULL = new Shape('\0', Direction.UP, Mirror.OFF, null);
 
     private final char name;
     private final Direction direction;
+    private final Mirror mirror;
     private final boolean[][] mask;
 
-    public static Shape create(char name, Direction direction, boolean[][] mask) {
-        return mask != null && mask.length > 0 ? new Shape(name, direction, mask) : NULL;
+    public static Shape create(char name, boolean[][] mask) {
+        return create(name, Direction.UP, Mirror.OFF, mask);
+    }
+
+    public static Shape create(char name, Direction direction, Mirror mirror, boolean[][] mask) {
+        return mask != null && mask.length > 0 ? new Shape(name, direction, mirror, mask) : NULL;
     }
 
     @SuppressWarnings({ "MethodCanBeVariableArityMethod", "AssignmentOrReturnOfFieldWithMutableType" })
-    private Shape(char name, Direction direction, boolean[][] mask) {
+    private Shape(char name, Direction direction, Mirror mirror, boolean[][] mask) {
         this.name = name;
         this.direction = direction;
+        this.mirror = mirror;
         this.mask = mask;
     }
 
     public int getWidth() {
+        return getWidth(mask);
+    }
+
+    public static int getWidth(boolean[][] mask) {
         return mask != null ? mask.length : 0;
     }
 
@@ -38,8 +50,8 @@ public final class Shape {
         return name;
     }
 
-    public boolean isTaken(int x, int y) {
-        return mask != null && mask[y][x];
+    boolean isTaken(int x, int y) {
+        return this != NULL && mask[y][x];
     }
 
     public boolean[][] getMask() {
@@ -56,31 +68,59 @@ public final class Shape {
         return res;
     }
 
-    public Set<Direction> getUniqueDirections() {
+    public static String hash(boolean[][] mask) {
+        if (mask == null)
+            return "";
+
+        int width = getWidth(mask);
+        StringBuilder buf = new StringBuilder();
+
+        for (int y = 0; y < width; y++)
+            for (int x = 0; x < width; x++)
+                buf.append(mask[y][x] ? '1' : '0');
+
+        return buf.toString();
+    }
+
+    public Set<Direction> getDirections() {
         if (this == NULL)
             return Collections.emptySet();
-
-        int up = Direction.UP.side(mask);
-        int right = Direction.RIGHT.side(mask);
-        int down = Direction.DOWN.side(mask);
-        int left = Direction.LEFT.side(mask);
 
         Set<Direction> directions = new LinkedHashSet<>();
         Set<Integer> sides = new HashSet<>();
 
-        if (sides.add(up))
-            directions.add(Direction.UP);
-        if (sides.add(right))
-            directions.add(Direction.RIGHT);
-        if (sides.add(down))
-            directions.add(Direction.DOWN);
-        if (sides.add(left))
-            directions.add(Direction.LEFT);
+        for (Direction direction : Direction.values())
+            if (sides.add(direction.hash(mask)))
+                directions.add(direction);
 
         return directions;
     }
 
-    public Shape rotateRight() {
+    public List<Shape> getRelatedShapes() {
+        if (this == NULL)
+            return Collections.emptyList();
+
+        Set<String> hashes = new HashSet<>();
+        List<Shape> shapes = new ArrayList<>();
+
+        for (Direction direction : Direction.values()) {
+            for (Mirror mirror : Mirror.values()) {
+                boolean[][] mask = getMask();
+                direction.apply(mask);
+                mirror.apply(mask);
+
+                if (hashes.add(hash(mask)))
+                    shapes.add(create(name, direction, mirror, mask));
+            }
+        }
+
+        return shapes;
+    }
+
+    static void rotateRight(boolean[][] mask) {
+        if (mask == null)
+            return;
+
         boolean tmp;
         int width = mask.length;
 
@@ -93,8 +133,6 @@ public final class Shape {
                 mask[j][width - i - 1] = tmp;
             }
         }
-
-        return this;
     }
 
     @Override

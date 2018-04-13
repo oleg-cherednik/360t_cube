@@ -14,36 +14,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DirectionTest {
 
     public void shouldNotRotateWhenUpDirection() {
-        assertThat(Direction.UP.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.UP, new boolean[][] {
-                { true, false, false },
-                { false, true, true },
-                { true, true, false } }));
+        boolean[][] mask = CREATE_MATRIX.get();
+        Direction.UP.apply(mask);
+        assertThat(mask).isEqualTo(new boolean[][] { { true, false, false }, { false, true, true }, { true, true, false } });
     }
 
     public void shouldRotateRightWhenRightDirection() {
-        assertThat(Direction.RIGHT.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.RIGHT, new boolean[][] {
-                { true, false, true },
-                { true, true, false },
-                { false, true, false } }));
+        boolean[][] mask = CREATE_MATRIX.get();
+        Direction.RIGHT.apply(mask);
+        assertThat(mask).isEqualTo(new boolean[][] { { true, false, true }, { true, true, false }, { false, true, false } });
     }
 
     public void shouldRotateLeftWhenLeftDirection() {
-        assertThat(Direction.LEFT.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.LEFT, new boolean[][] {
-                { false, true, false },
-                { false, true, true },
-                { true, false, true } }));
+        boolean[][] mask = CREATE_MATRIX.get();
+        Direction.LEFT.apply(mask);
+        assertThat(mask).isEqualTo(new boolean[][] { { false, true, false }, { false, true, true }, { true, false, true } });
     }
 
     public void shouldRotateDownWhenDownDirection() {
-        assertThat(Direction.DOWN.rotate().apply(CREATE_MATRIX.get())).isEqualTo(Shape.create('A', Direction.DOWN, new boolean[][] {
-                { false, true, true },
-                { true, true, false },
-                { false, false, true } }));
+        boolean[][] mask = CREATE_MATRIX.get();
+        Direction.DOWN.apply(mask);
+        assertThat(mask).isEqualTo(new boolean[][] { { false, true, true }, { true, true, false }, { false, false, true } });
     }
 
-    private static final Supplier<Shape> CREATE_MATRIX =
-            () -> Shape.create('A', Direction.UP, new boolean[][] {
+    private static final Supplier<boolean[][]> CREATE_MATRIX =
+            () -> new boolean[][] {
                     { true, false, false },
                     { false, true, true },
-                    { true, true, false } });
+                    { true, true, false } };
 }

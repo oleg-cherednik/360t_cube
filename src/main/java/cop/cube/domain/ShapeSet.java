@@ -25,6 +25,13 @@ public final class ShapeSet implements Iterable<Shape> {
     private final int width;
 
     public static ShapeSet create(List<Supplier<Shape>> shapeSuppliers) {
+        for(Supplier<Shape> supplier : shapeSuppliers) {
+            Shape shape = supplier.get();
+
+            int a = 0;
+            a++;
+        }
+
         Set<Shape> shapes = Optional.ofNullable(shapeSuppliers).orElse(Collections.emptyList()).stream()
                                     .filter(Objects::nonNull)
                                     .map(Supplier::get)

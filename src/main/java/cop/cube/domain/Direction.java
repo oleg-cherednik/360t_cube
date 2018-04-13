@@ -1,70 +1,70 @@
 package cop.cube.domain;
 
-import java.util.function.Function;
-
 /**
  * @author Oleg Cherednik
  * @since 11.04.2018
  */
 @SuppressWarnings("MethodCanBeVariableArityMethod")
 public enum Direction {
-    UP(shape -> shape) {
+    UP(0) {
         @Override
-        public int side(boolean[][] mask) {
+        public int hash(boolean[][] mask) {
             final int width = width(mask);
-            int side = 0;
+            int hash = 0;
 
             for (int i = 0; i < width; i++)
-                side |= bit(i, mask[0][i]);
+                hash |= bit(i, mask[0][i]);
 
-            return side;
+            return hash;
         }
     },
-    RIGHT(Shape::rotateRight) {
+    RIGHT(1) {
         @Override
-        public int side(boolean[][] mask) {
+        public int hash(boolean[][] mask) {
             final int width = width(mask);
-            int side = 0;
+            int hash = 0;
 
             for (int i = 0, j = width - 1; i < width; i++, j--)
-                side |= bit(i, mask[j][0]);
+                hash |= bit(i, mask[j][0]);
 
-            return side;
+            return hash;
         }
     },
-    DOWN(shape -> shape.rotateRight().rotateRight()) {
+    DOWN(2) {
         @Override
-        public int side(boolean[][] mask) {
+        public int hash(boolean[][] mask) {
             final int width = width(mask);
-            int side = 0;
+            int hash = 0;
 
             for (int i = 0, j = width - 1; i < width; i++, j--)
-                side |= bit(i, mask[width - 1][j]);
+                hash |= bit(i, mask[width - 1][j]);
 
-            return side;
+            return hash;
         }
     },
-    LEFT(shape -> shape.rotateRight().rotateRight().rotateRight()) {
+    LEFT(3) {
         @Override
-        public int side(boolean[][] mask) {
+        public int hash(boolean[][] mask) {
             final int width = width(mask);
-            int side = 0;
+            int hash = 0;
 
             for (int i = 0; i < width; i++)
-                side |= bit(i, mask[i][width - 1]);
+                hash |= bit(i, mask[i][width - 1]);
 
-            return side;
+            return hash;
         }
     };
 
-    private final Function<Shape, Shape> rotate;
+    private final int rightRotateCount;
 
-    Direction(Function<Shape, Shape> rotate) {
-        this.rotate = rotate;
+    Direction(int rightRotateCount) {
+        this.rightRotateCount = rightRotateCount;
     }
 
-    public Function<Shape, Shape> rotate() {
-        return rotate;
+    public final void apply(boolean[][] mask) {
+        if (mask != null)
+            for (int i = 0; i < rightRotateCount; i++)
+                Shape.rotateRight(mask);
     }
 
     protected static int width(boolean[][] mask) {
@@ -72,8 +72,8 @@ public enum Direction {
     }
 
     protected static int bit(int i, boolean taken) {
-        return taken ? 1 << (i + 1) : 0x0;
+        return taken ? 1 << i : 0x0;
     }
 
-    public abstract int side(boolean[][] mask);
+    public abstract int hash(boolean[][] mask);
 }

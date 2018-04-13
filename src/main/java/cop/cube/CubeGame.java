@@ -1,7 +1,6 @@
 package cop.cube;
 
 import cop.cube.domain.Cube;
-import cop.cube.domain.Direction;
 import cop.cube.domain.Shape;
 import cop.cube.domain.ShapeSet;
 import cop.cube.exceptions.CubeException;
@@ -46,24 +45,20 @@ public final class CubeGame {
     private static void foo(Cube cube, Queue<Shape> shapes, List<Cube> cubes) {
         if (shapes.isEmpty()) {
             if (cube.isComplete()) {
-                // TODO copy
-                cubes.add(cube);
+                cubes.add(cube.clone());
             }
         } else {
-            Shape shape = shapes.remove();
-            boolean[][] mask = shape.getMask();
-
-            for (Direction direction : shape.getUniqueDirections()) {
-                Shape rotatedShape = direction.rotate().apply(Shape.create(shape.getName(), direction, shape.getMask()));
-
-                if (cube.addNext(rotatedShape)) {
+            for (Shape shape : shapes.remove().getRelatedShapes()) {
+                if (cube.addNext(shape)) {
                     foo(cube, new LinkedList<>(shapes), cubes);
                     cube.removeCurrentSide();
                 }
             }
+
+            int a = 0;
+            a++;
         }
     }
-
 
     public static void main(String... args) {
         List<Supplier<Shape>> shapeSuppliers = Arrays.asList(SHAPE_A, SHAPE_E, SHAPE_B, SHAPE_F, SHAPE_D, SHAPE_C);
@@ -77,12 +72,12 @@ public final class CubeGame {
 
     }
 
-    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', Direction.UP, convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
-    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', Direction.UP, convert("oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER));
-    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', Direction.UP, convert("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER));
-    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', Direction.UP, convert("oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER));
-    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', Direction.UP, convert("o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER));
-    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', Direction.UP, convert(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_A = () -> Shape.create('A', convert("..o..\n.ooo.\nooooo\n.ooo.\n..o..", MARKER));
+    private static final Supplier<Shape> SHAPE_B = () -> Shape.create('B', convert("oo.oo\n.ooo.\nooooo\n.ooo.\noo.oo", MARKER));
+    private static final Supplier<Shape> SHAPE_C = () -> Shape.create('C', convert("..o..\n.oooo\noooo.\n.oooo\n..o..", MARKER));
+    private static final Supplier<Shape> SHAPE_D = () -> Shape.create('D', convert("oo.oo\noooo.\n.oooo\noooo.\n.o.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_E = () -> Shape.create('E', convert("o.o..\nooooo\n.ooo.\nooooo\n.o.o.", MARKER));
+    private static final Supplier<Shape> SHAPE_F = () -> Shape.create('F', convert(".o.o.\noooo.\n.oooo\noooo.\noo.o.", MARKER));
 
     private static boolean[][] convert(String data, char marker) {
         if (data == null || data.trim().isEmpty() || marker == '\0')
