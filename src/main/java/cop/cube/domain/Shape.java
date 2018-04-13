@@ -19,8 +19,6 @@ public final class Shape {
 
     private final String id;
     private final char name;
-    private final Direction direction;
-    private final Mirror mirror;
     private final boolean[][] mask;
 
     public static Shape create(char name, boolean[][] mask) {
@@ -35,8 +33,6 @@ public final class Shape {
     private Shape(char name, Direction direction, Mirror mirror, boolean[][] mask) {
         id = this != NULL ? String.valueOf(name) + '-' + direction + '-' + mirror : "<empty>";
         this.name = name;
-        this.direction = direction;
-        this.mirror = mirror;
         this.mask = mask;
     }
 
@@ -46,10 +42,6 @@ public final class Shape {
 
     public static int getWidth(boolean[][] mask) {
         return mask != null ? mask.length : 0;
-    }
-
-    public char getName() {
-        return name;
     }
 
     boolean isTaken(int x, int y) {
