@@ -115,26 +115,6 @@ public final class SquareShape {
     }
 
     /**
-     * Retrieve unique hash string for the given {@code mask}. This string could be use to unique identify given 2D array.
-     *
-     * @param mask 2D array.
-     * @return unique hash string; empty string for {@literal null} or empty {@code mask}
-     */
-    private static String hash(boolean[][] mask) {
-        if (mask == null || mask.length == 0)
-            return "";
-
-        int width = getWidth(mask);
-        StringBuilder buf = new StringBuilder();
-
-        for (int y = 0; y < width; y++)
-            for (int x = 0; x < width; x++)
-                buf.append(mask[y][x] ? '1' : '0');
-
-        return buf.toString();
-    }
-
-    /**
      * List of unique shapes, that could be create with rotation and/or mirroring of the current shape. Multiple invoke of this method generates this
      * list only once.
      *
@@ -160,6 +140,26 @@ public final class SquareShape {
         }
 
         return relatedShapes = shapes.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(shapes);
+    }
+
+    /**
+     * Retrieve unique hash string for the given {@code mask}. This string could be use to unique identify given 2D array.
+     *
+     * @param mask 2D array.
+     * @return unique hash string; empty string for {@literal null} or empty {@code mask}
+     */
+    private static String hash(boolean[][] mask) {
+        if (mask == null || mask.length == 0)
+            return "";
+
+        int width = getWidth(mask);
+        StringBuilder buf = new StringBuilder();
+
+        for (int y = 0; y < width; y++)
+            for (int x = 0; x < width; x++)
+                buf.append(mask[y][x] ? '1' : '0');
+
+        return buf.toString();
     }
 
     /**

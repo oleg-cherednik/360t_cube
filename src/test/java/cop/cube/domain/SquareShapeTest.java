@@ -80,5 +80,4 @@ public class SquareShapeTest {
                     { false, true, true },
                     { true, true, false } };
 
-
 }
