@@ -19,7 +19,13 @@ import cop.cube.domain.SquareShape;
 @SuppressWarnings("MethodCanBeVariableArityMethod")
 final class LeftCubeSide extends CubeSide {
 
-    public LeftCubeSide() {
+    private static final LeftCubeSide INSTANCE = new LeftCubeSide();
+
+    public static LeftCubeSide getInstance() {
+        return INSTANCE;
+    }
+
+    private LeftCubeSide() {
         super(Cube.Side.LEFT, Cube.Side.SIDE_3, Cube.Side.FRONT);
     }
 

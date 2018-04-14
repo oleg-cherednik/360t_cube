@@ -48,6 +48,7 @@ public final class Cube implements Cloneable {
 
     private final int width;
     private final char[][][] data;
+    private final Map<Side, CubeSide> sides = Side.getSideInstance();
     private final Deque<SquareShape> shapes = new LinkedList<>();
 
     private Side side = Side.FRONT;
@@ -565,6 +566,14 @@ public final class Cube implements Cloneable {
                     return false;
             return true;
         }
+
+        private static Map<Side, CubeSide> getSideInstance() {
+            Map<Side, CubeSide> map = new EnumMap<>(Side.class);
+            map.put(FRONT, FrontCubeSide.getInstance());
+            map.put(LEFT, LeftCubeSide.getInstance());
+            return Collections.unmodifiableMap(map);
+        }
+
     }
 
 }
