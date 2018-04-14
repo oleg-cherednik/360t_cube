@@ -70,6 +70,10 @@ public final class Cube implements Cloneable {
         return cube;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
     public boolean addNextSide(Shape shape) {
         if (width != shape.getWidth())
             throw new CubeException("Shape's width does not match with cube's width");

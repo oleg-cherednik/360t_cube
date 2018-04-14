@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -110,9 +109,7 @@ public final class CubeGame {
 
         if (totalSolution > 0) {
             Cube cube = cubeGame.getFoundSolutions().iterator().next();
-            Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
-
-            CubeForm.INSTANCE.print(sides, MARKER, System.out);
+            CubeForm.getInstance().print(cube, MARKER, System.out);
         }
     }
 
