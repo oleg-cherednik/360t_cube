@@ -49,7 +49,7 @@ public final class Cube implements Cloneable {
     private final char[][][] data;
     private final Deque<SquareShape> shapes = new LinkedList<>();
 
-    private Side side = Side.SIDE_1;
+    private Side side = Side.FRONT;
 
     public Cube(int width) {
         this.width = width;
@@ -116,16 +116,19 @@ public final class Cube implements Cloneable {
     }
 
     public enum Side {
-        SIDE_1('1') {
+        FRONT('1') {
             @Override
-            protected boolean isCompleted(char[][][] data) {
+            public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int z = 0;
 
+                for (int x = 0; x < width; x++)
+                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
+                        return false;
+
                 for (int y = 0; y < width; y++)
-                    for (int x = 0; x < width; x++)
-                        if (!isTaken(x, y, z, data))
-                            return false;
+                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
+                        return false;
 
                 return true;
             }
@@ -147,7 +150,7 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side previous() {
-                return SIDE_1;
+                return FRONT;
             }
 
             @Override
@@ -183,7 +186,7 @@ public final class Cube implements Cloneable {
         },
         SIDE_2('2') {
             @Override
-            protected boolean isCompleted(char[][][] data) {
+            public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int x = 0;
 
@@ -212,7 +215,7 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side previous() {
-                return SIDE_1;
+                return FRONT;
             }
 
             @Override
@@ -248,7 +251,7 @@ public final class Cube implements Cloneable {
         },
         SIDE_3('3') {
             @Override
-            protected boolean isCompleted(char[][][] data) {
+            public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int y = width - 1;
 
@@ -313,7 +316,7 @@ public final class Cube implements Cloneable {
         },
         SIDE_4('4') {
             @Override
-            protected boolean isCompleted(char[][][] data) {
+            public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int y = 0;
 
@@ -378,7 +381,7 @@ public final class Cube implements Cloneable {
         },
         SIDE_5('5') {
             @Override
-            protected boolean isCompleted(char[][][] data) {
+            public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int x = width - 1;
 
@@ -443,7 +446,7 @@ public final class Cube implements Cloneable {
         },
         SIDE_6('6') {
             @Override
-            protected boolean isCompleted(char[][][] data) {
+            public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int z = width - 1;
 
@@ -513,13 +516,17 @@ public final class Cube implements Cloneable {
             this.marker = marker;
         }
 
-        protected abstract boolean isCompleted(char[][][] data);
+        public abstract boolean isCompleted(char[][][] data);
 
         public abstract void clear(char[][][] data);
 
         public abstract Side next();
 
         public abstract Side previous();
+
+        public char marker() {
+            return marker;
+        }
 
         public abstract boolean add(SquareShape shape, char[][][] data);
 

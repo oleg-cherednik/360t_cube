@@ -40,7 +40,7 @@ public final class CubeForm implements PrintStrategy {
         boolean[][] empty = new boolean[width][width];
         Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
 
-        boolean[][] mask1 = sides.getOrDefault(Cube.Side.SIDE_1, empty);
+        boolean[][] mask1 = sides.getOrDefault(Cube.Side.FRONT, empty);
         boolean[][] mask2 = sides.getOrDefault(Cube.Side.SIDE_2, empty);
         boolean[][] mask3 = sides.getOrDefault(Cube.Side.SIDE_3, empty);
         boolean[][] mask4 = sides.getOrDefault(Cube.Side.SIDE_4, empty);

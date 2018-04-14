@@ -4,7 +4,6 @@ import cop.cube.exceptions.CubeException;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -26,14 +25,14 @@ public class SquareShapeTest {
     }
 
     public void shouldRetrieveCreatedShapeWithDefaultDirectionAndMirrorWhenMaskSet() {
-        SquareShape shape = SquareShape.create('A', CREATE_MATRIX.get());
+        SquareShape shape = SquareShape.create('A', createSquare());
         assertThat(shape).isNotNull();
         assertThat(shape).isNotSameAs(SquareShape.NULL);
         assertThat(shape.toString()).isEqualTo("A-" + Direction.UP + '-' + Mirror.OFF);
     }
 
     public void shouldRetrieveFullCopyOfInternalMaskWhenGetMask() {
-        SquareShape shape = SquareShape.create('A', CREATE_MATRIX.get());
+        SquareShape shape = SquareShape.create('A', createSquare());
         boolean[][] mask = shape.getMask();
         assertThat(mask).isNotNull();
         assertThat(mask).isEqualTo(new boolean[][] { { true, false, false }, { false, true, true }, { true, true, false } });
@@ -53,7 +52,7 @@ public class SquareShapeTest {
     }
 
     public void shouldGenerateRelatedShapesOnlyOnceWhenGetRelatedShapes() {
-        SquareShape shape = SquareShape.create('A', CREATE_MATRIX.get());
+        SquareShape shape = SquareShape.create('A', createSquare());
         List<SquareShape> relatedShapes = shape.getRelatedShapes();
 
         assertThat(relatedShapes).isNotEmpty();
@@ -61,8 +60,13 @@ public class SquareShapeTest {
     }
 
     public void shouldGenerateRelatedShapesOnlyForDefaultShape() {
-        SquareShape shape = SquareShape.create('A', Direction.DOWN, Mirror.ON, CREATE_MATRIX.get());
+        SquareShape shape = SquareShape.create('A', Direction.DOWN, Mirror.ON, createSquare());
         assertThat(shape.getRelatedShapes()).isEmpty();
+    }
+
+    public void shouldRetrieveOnlyUniqueRelatedShapes() {
+        SquareShape shape = SquareShape.create('A', new boolean[][] { { false, true, false }, { true, true, true }, { false, true, false } });
+        assertThat(shape.getRelatedShapes()).hasSize(1);
     }
 
     public void shouldThrowExceptionWhenCreateShapeWithNotSquareMask() {
@@ -74,10 +78,11 @@ public class SquareShapeTest {
                         { true, true, false } }));
     }
 
-    private static final Supplier<boolean[][]> CREATE_MATRIX =
-            () -> new boolean[][] {
-                    { true, false, false },
-                    { false, true, true },
-                    { true, true, false } };
+    private static boolean[][] createSquare() {
+        return new boolean[][] {
+                { true, false, false },
+                { false, true, true },
+                { true, true, false } };
+    }
 
 }
