@@ -1,12 +1,17 @@
 package cop.cube.domain;
 
 /**
+ * Represents mirroring of the {@link Shape}. Only {@link Mirror#HORIZONTAL} mirror is supported, because vertical mirror is the same as 180 degree
+ * rotation. Be default shape mirroring is {@link Mirror#OFF}.
+ *
  * @author Oleg Cherednik
  * @since 13.04.2018
  */
 @SuppressWarnings("MethodCanBeVariableArityMethod")
 public enum Mirror {
+    /** default is off */
     OFF,
+    /** mirror horizontal */
     HORIZONTAL {
         @Override
         public void apply(boolean[][] mask) {
