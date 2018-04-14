@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Test
 public class LeftCubeSideTest {
 
-    public void shouldAddShapeToTheFrontSide() {
+    public void shouldAddShapeToTheLeftSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
         Cube.Side.LEFT.add(shape, data);
@@ -33,7 +33,7 @@ public class LeftCubeSideTest {
                     assertThat(data[y][x][z]).isEqualTo('\0');
     }
 
-    public void shouldRetrieveMaskFromFrontSide() {
+    public void shouldRetrieveMaskFromLeftSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
         Cube.Side.LEFT.add(shape, data);
@@ -47,28 +47,28 @@ public class LeftCubeSideTest {
         char[][][] data = new char[3][3][3];
 
         for (int y = 0; y < 3; y++)
-            for (int x = 0; x < 3; x++)
-                data[y][x][0] = Cube.Side.LEFT.marker();
+            for (int z = 0; z < 3; z++)
+                data[y][0][z] = Cube.Side.LEFT.marker();
 
         Cube.Side.LEFT.clear(data);
 
         for (int y = 0; y < 3; y++)
-            for (int x = 0; x < 3; x++)
-                assertThat(data[y][x][0]).isEqualTo('\0');
+            for (int z = 0; z < 3; z++)
+                assertThat(data[y][z][z]).isEqualTo('\0');
     }
 
     public void shouldRetrieveCompletedWhenAllBorderCellsTaken() {
         char[][][] data = new char[3][3][3];
         data[0][0][0] = 'A';
-        data[0][1][0] = 'A';
-        data[0][2][0] = 'A';
+        data[0][0][1] = 'A';
+        data[0][0][2] = 'A';
 
         data[1][0][0] = 'A';
-        data[1][2][0] = 'A';
+        data[1][0][2] = 'A';
 
         data[2][0][0] = 'A';
-        data[2][1][0] = 'A';
-        data[2][2][0] = 'A';
+        data[2][0][1] = 'A';
+        data[2][0][2] = 'A';
 
         assertThat(Cube.Side.LEFT.isCompleted(data)).isTrue();
     }

@@ -191,10 +191,13 @@ public final class Cube implements Cloneable {
                 final int width = width(data);
                 final int x = 0;
 
+                for (int z = 0; z < width; z++)
+                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
+                        return false;
+
                 for (int y = 0; y < width; y++)
-                    for (int z = width - 1; z >= 0; z--)
-                        if (!isTaken(x, y, z, data))
-                            return false;
+                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
+                        return false;
 
                 return true;
             }
