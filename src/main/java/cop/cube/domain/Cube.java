@@ -477,10 +477,6 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(SquareShape shape, char[][][] data) {
-                if (shape.toString().equals("C-UP-ON")) {
-                    int a = 0;
-                    a++;
-                }
                 final int width = width(data);
                 final int z = width - 1;
 
