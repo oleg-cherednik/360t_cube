@@ -6,6 +6,14 @@ import java.io.PrintStream;
 import java.util.Map;
 
 /**
+ * Cube form printing strategy. Prints given {@link Cube} with following format int given {@link PrintStream}:
+ *
+ * <pre>
+ * -------------------------
+ * | 1 | 2 | 3 | 4 | 5 | 6 |
+ * -------------------------
+ * </pre>
+ *
  * @author Oleg Cherednik
  * @since 14.04.2018
  */
