@@ -91,7 +91,7 @@ public final class SquareShape {
      * @param y y coordinate
      * @return {@literal true} if given cell is taken
      */
-    boolean isTaken(int x, int y) {
+    public boolean isTaken(int x, int y) {
         return this != NULL && mask[y][x];
     }
 

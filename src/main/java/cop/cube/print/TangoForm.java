@@ -1,6 +1,6 @@
 package cop.cube.print;
 
-import cop.cube.domain.Cube;
+import cop.cube.domain.cube.Cube;
 
 import java.io.PrintStream;
 import java.util.Map;

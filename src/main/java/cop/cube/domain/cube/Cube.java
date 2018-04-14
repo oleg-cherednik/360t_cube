@@ -1,5 +1,6 @@
-package cop.cube.domain;
+package cop.cube.domain.cube;
 
+import cop.cube.domain.SquareShape;
 import cop.cube.exceptions.CubeException;
 
 import java.util.Collections;
@@ -145,7 +146,7 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side next() {
-                return SIDE_2;
+                return LEFT;
             }
 
             @Override
@@ -184,7 +185,7 @@ public final class Cube implements Cloneable {
                 return mask;
             }
         },
-        SIDE_2('2') {
+        LEFT('2') {
             @Override
             public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
@@ -280,7 +281,7 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side previous() {
-                return SIDE_2;
+                return LEFT;
             }
 
             @Override

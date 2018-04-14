@@ -1,6 +1,5 @@
 package cop.cube.domain.cube;
 
-import cop.cube.domain.Cube;
 import cop.cube.domain.SquareShape;
 import org.testng.annotations.Test;
 
@@ -11,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 14.04.2018
  */
 @Test
-public class FrontSideTest {
+public class FrontCubeSideTest {
 
     public void shouldAddShapeToTheFrontSide() {
         char[][][] data = new char[3][3][3];

@@ -1,6 +1,6 @@
 package cop.cube;
 
-import cop.cube.domain.Cube;
+import cop.cube.domain.cube.Cube;
 import cop.cube.domain.SquareShape;
 import cop.cube.exceptions.CubeException;
 import cop.cube.print.CubeForm;
