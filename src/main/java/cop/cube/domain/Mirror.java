@@ -1,7 +1,7 @@
 package cop.cube.domain;
 
 /**
- * Represents mirroring of the {@link Shape}. Bн default shape mirroring is {@link Mirror#OFF}.
+ * Represents mirroring of the {@link SquareShape}. Bн default shape mirroring is {@link Mirror#OFF}.
  *
  * @author Oleg Cherednik
  * @since 13.04.2018

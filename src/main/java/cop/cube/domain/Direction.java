@@ -1,7 +1,7 @@
 package cop.cube.domain;
 
 /**
- * Represents rotate direction of the {@link Shape}. {@link Direction#UP} is the default orientation.
+ * Represents rotate direction of the {@link SquareShape}. {@link Direction#UP} is the default orientation.
  *
  * @author Oleg Cherednik
  * @since 11.04.2018
@@ -26,6 +26,6 @@ public enum Direction {
     public final void apply(boolean[][] maskUpDirection) {
         if (maskUpDirection != null)
             for (int i = 0; i < rotateRightCount; i++)
-                Shape.rotateRight(maskUpDirection);
+                SquareShape.rotateRight(maskUpDirection);
     }
 }

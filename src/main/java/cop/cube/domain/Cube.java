@@ -47,7 +47,7 @@ public final class Cube implements Cloneable {
 
     private final int width;
     private final char[][][] data;
-    private final Deque<Shape> shapes = new LinkedList<>();
+    private final Deque<SquareShape> shapes = new LinkedList<>();
 
     private Side side = Side.SIDE_1;
 
@@ -74,7 +74,7 @@ public final class Cube implements Cloneable {
         return width;
     }
 
-    public boolean addNextSide(Shape shape) {
+    public boolean addNextSide(SquareShape shape) {
         if (width != shape.getWidth())
             throw new CubeException("Shape's width does not match with cube's width");
 
@@ -150,7 +150,7 @@ public final class Cube implements Cloneable {
             }
 
             @Override
-            public boolean add(Shape shape, char[][][] data) {
+            public boolean add(SquareShape shape, char[][][] data) {
                 final int width = width(data);
                 final int z = 0;
 
@@ -215,7 +215,7 @@ public final class Cube implements Cloneable {
             }
 
             @Override
-            public boolean add(Shape shape, char[][][] data) {
+            public boolean add(SquareShape shape, char[][][] data) {
                 final int width = width(data);
                 final int x = 0;
 
@@ -280,7 +280,7 @@ public final class Cube implements Cloneable {
             }
 
             @Override
-            public boolean add(Shape shape, char[][][] data) {
+            public boolean add(SquareShape shape, char[][][] data) {
                 final int width = width(data);
                 final int y = width - 1;
 
@@ -345,7 +345,7 @@ public final class Cube implements Cloneable {
             }
 
             @Override
-            public boolean add(Shape shape, char[][][] data) {
+            public boolean add(SquareShape shape, char[][][] data) {
                 final int width = width(data);
                 final int y = 0;
 
@@ -410,7 +410,7 @@ public final class Cube implements Cloneable {
             }
 
             @Override
-            public boolean add(Shape shape, char[][][] data) {
+            public boolean add(SquareShape shape, char[][][] data) {
                 final int width = width(data);
                 final int x = width - 1;
 
@@ -475,7 +475,7 @@ public final class Cube implements Cloneable {
             }
 
             @Override
-            public boolean add(Shape shape, char[][][] data) {
+            public boolean add(SquareShape shape, char[][][] data) {
                 final int width = width(data);
                 final int z = width - 1;
 
@@ -520,7 +520,7 @@ public final class Cube implements Cloneable {
 
         public abstract Side previous();
 
-        public abstract boolean add(Shape shape, char[][][] data);
+        public abstract boolean add(SquareShape shape, char[][][] data);
 
         public abstract boolean[][] mask(char[][][] data);
 
