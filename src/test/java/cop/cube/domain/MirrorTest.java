@@ -21,7 +21,7 @@ public class MirrorTest {
 
     public void shouldHorizontalMirrorWhenHorizontalMirror() {
         boolean[][] mask = CREATE_MATRIX.get();
-        Mirror.HORIZONTAL.apply(mask);
+        Mirror.ON.apply(mask);
         assertThat(mask).isEqualTo(new boolean[][] { { true, true, false }, { false, true, true }, { true, false, false } });
     }
 
