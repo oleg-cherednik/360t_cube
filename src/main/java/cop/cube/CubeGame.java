@@ -4,6 +4,7 @@ import cop.cube.domain.Cube;
 import cop.cube.domain.SquareShape;
 import cop.cube.exceptions.CubeException;
 import cop.cube.print.CubeForm;
+import cop.cube.print.TangoForm;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,6 +71,8 @@ public final class CubeGame {
     }
 
     private void solve(Cube cube, Set<SquareShape> shapes, boolean useRelated) {
+        if(cubes.size() == 1)
+            return;
         if (shapes.isEmpty() && cube.isComplete()) {
             cubes.add(cube.clone());
             return;
@@ -110,6 +113,7 @@ public final class CubeGame {
         if (totalSolution > 0) {
             Cube cube = cubeGame.getFoundSolutions().iterator().next();
             CubeForm.getInstance().print(cube, MARKER, System.out);
+            TangoForm.getInstance().print(cube, MARKER, System.out);
         }
     }
 

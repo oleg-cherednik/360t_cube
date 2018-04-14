@@ -61,6 +61,7 @@ public final class Cube implements Cloneable {
     public Cube clone() {
         Cube cube = new Cube(width);
         cube.side = side;
+        cube.shapes.addAll(shapes);
 
         for (int z = 0; z < width; z++)
             for (int y = 0; y < width; y++)
@@ -367,9 +368,9 @@ public final class Cube implements Cloneable {
 
                     mask = new boolean[width][width];
 
-                    for (int z = width - 1; z >= 0; z--)
+                    for (int z = 0; z < width; z++)
                         for (int x = 0; x < width; x++)
-                            mask[z][x] = data[y][x][z] == marker;
+                            mask[z][x] = data[y][x][width - z - 1] == marker;
                 }
 
                 return mask;
@@ -476,6 +477,10 @@ public final class Cube implements Cloneable {
 
             @Override
             public boolean add(SquareShape shape, char[][][] data) {
+                if (shape.toString().equals("C-UP-ON")) {
+                    int a = 0;
+                    a++;
+                }
                 final int width = width(data);
                 final int z = width - 1;
 
@@ -499,7 +504,7 @@ public final class Cube implements Cloneable {
 
                     for (int y = 0; y < width; y++)
                         for (int x = 0; x < width; x++)
-                            mask[y][x] = data[y][x][z] == marker;
+                            mask[y][x] = data[width - y - 1][x][z] == marker;
                 }
 
                 return mask;
