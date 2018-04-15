@@ -116,8 +116,11 @@ public final class CubeGame {
 
         if (totalSolution > 0) {
             Cube cube = cubeGame.getFoundSolutions().iterator().next();
+            System.out.println("----------");
             CubeForm.getInstance().print(cube, marker, System.out);
+            System.out.println("----------");
             TangoForm.getInstance().print(cube, marker, System.out);
+            System.out.println("----------");
         }
     }
 

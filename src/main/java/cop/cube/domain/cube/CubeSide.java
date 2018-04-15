@@ -3,6 +3,9 @@ package cop.cube.domain.cube;
 import cop.cube.domain.SquareShape;
 
 /**
+ * Represents cub side with set of method for the side. This is stateless implementation. Real data is {@code data} array, all methods work with it
+ * and do not create additional temporary arrays.
+ *
  * @author Oleg Cherednik
  * @since 14.04.2018
  */
