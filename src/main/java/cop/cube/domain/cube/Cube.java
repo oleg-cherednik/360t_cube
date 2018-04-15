@@ -215,7 +215,7 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side next() {
-                return SIDE_3;
+                return BOTTOM;
             }
 
             @Override
@@ -254,16 +254,19 @@ public final class Cube implements Cloneable {
                 return mask;
             }
         },
-        SIDE_3('3') {
+        BOTTOM('3') {
             @Override
             public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
                 final int y = width - 1;
 
+                for (int x = 0; x < width; x++)
+                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
+                        return false;
+
                 for (int z = 0; z < width; z++)
-                    for (int x = 0; x < width; x++)
-                        if (!isTaken(x, y, z, data))
-                            return false;
+                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
+                        return false;
 
                 return true;
             }
@@ -280,7 +283,7 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side next() {
-                return SIDE_4;
+                return TOP;
             }
 
             @Override
@@ -319,16 +322,19 @@ public final class Cube implements Cloneable {
                 return mask;
             }
         },
-        SIDE_4('4') {
+        TOP('4') {
             @Override
             public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
-                final int y = 0;
+                final int y =0;
 
-                for (int z = width - 1; z >= 0; z--)
-                    for (int x = 0; x < width; x++)
-                        if (!isTaken(x, y, z, data))
-                            return false;
+                for (int x = 0; x < width; x++)
+                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
+                        return false;
+
+                for (int z = 0; z < width; z++)
+                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
+                        return false;
 
                 return true;
             }
@@ -345,12 +351,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side next() {
-                return SIDE_5;
+                return RIGHT;
             }
 
             @Override
             public Side previous() {
-                return SIDE_3;
+                return BOTTOM;
             }
 
             @Override
@@ -384,7 +390,7 @@ public final class Cube implements Cloneable {
                 return mask;
             }
         },
-        SIDE_5('5') {
+        RIGHT('5') {
             @Override
             public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
@@ -410,12 +416,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side next() {
-                return SIDE_6;
+                return BACK;
             }
 
             @Override
             public Side previous() {
-                return SIDE_4;
+                return TOP;
             }
 
             @Override
@@ -449,7 +455,7 @@ public final class Cube implements Cloneable {
                 return mask;
             }
         },
-        SIDE_6('6') {
+        BACK('6') {
             @Override
             public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
@@ -475,12 +481,12 @@ public final class Cube implements Cloneable {
 
             @Override
             public Side next() {
-                return SIDE_6;
+                return BACK;
             }
 
             @Override
             public Side previous() {
-                return SIDE_5;
+                return RIGHT;
             }
 
             @Override
@@ -571,6 +577,8 @@ public final class Cube implements Cloneable {
             Map<Side, CubeSide> map = new EnumMap<>(Side.class);
             map.put(FRONT, FrontCubeSide.getInstance());
             map.put(LEFT, LeftCubeSide.getInstance());
+            map.put(BOTTOM, BottomCubeSide.getInstance());
+            map.put(TOP, TopCubeSide.getInstance());
             return Collections.unmodifiableMap(map);
         }
 

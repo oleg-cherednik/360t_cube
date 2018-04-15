@@ -43,7 +43,7 @@ public class LeftCubeSideTest {
         assertThat(mask).isEqualTo(createSquare());
     }
 
-    public void shouldClearFrontSide() {
+    public void shouldClearLeftSide() {
         char[][][] data = new char[3][3][3];
 
         for (int y = 0; y < 3; y++)
@@ -54,7 +54,7 @@ public class LeftCubeSideTest {
 
         for (int y = 0; y < 3; y++)
             for (int z = 0; z < 3; z++)
-                assertThat(data[y][z][z]).isEqualTo('\0');
+                assertThat(data[y][0][z]).isEqualTo('\0');
     }
 
     public void shouldRetrieveCompletedWhenAllBorderCellsTaken() {
