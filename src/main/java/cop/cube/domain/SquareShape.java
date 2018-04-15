@@ -76,6 +76,10 @@ public final class SquareShape {
         this.mask = mask;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public int getWidth() {
         return getWidth(mask);
     }

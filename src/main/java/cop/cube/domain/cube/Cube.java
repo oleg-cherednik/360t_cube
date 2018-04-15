@@ -6,8 +6,10 @@ import cop.cube.exceptions.CubeException;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.EnumMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This is representation of the cube. Cube has <tt>width</tt> and 6 sides. Up to 6 {@link SquareShape} could be added to the cube's sides and then
@@ -34,6 +36,10 @@ public final class Cube implements Cloneable {
 
     public int getWidth() {
         return width;
+    }
+
+    public Set<SquareShape> getShapes() {
+        return shapes.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(new LinkedHashSet<>(shapes));
     }
 
     /**
