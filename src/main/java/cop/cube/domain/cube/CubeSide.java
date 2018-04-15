@@ -58,8 +58,8 @@ public abstract class CubeSide {
         Map<Side, CubeSide> map = new EnumMap<>(Side.class);
         map.put(Side.FRONT, FrontBackCubeSide.getFrontInstance());
         map.put(Side.LEFT, LeftRightCubeSide.getLeftInstance());
-        map.put(Side.BOTTOM, BottomCubeSide.getInstance());
-        map.put(Side.TOP, TopCubeSide.getInstance());
+        map.put(Side.BOTTOM, TopBottomCubeSide.getBottomInstance());
+        map.put(Side.TOP, TopBottomCubeSide.getTopInstance());
         map.put(Side.RIGHT, LeftRightCubeSide.getRightInstance());
         map.put(Side.BACK, FrontBackCubeSide.getBackInstance());
         return Collections.unmodifiableMap(map);

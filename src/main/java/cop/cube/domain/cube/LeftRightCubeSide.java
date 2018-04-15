@@ -7,8 +7,8 @@ import java.util.function.IntFunction;
 
 /**
  * Represents two sides of the cube:<br>
- * <tt>left</tt> - for standard cube, this is side with number <tt>two</tt>. For 3D array implementation, this is side with <tt>x = 0</tt> and <tt>y
- * from 0 to width - 1</tt>:
+ * <tt>left</tt> - for standard cube, this is side with number <tt>two</tt>. For 3D array implementation, this is side with <tt>x = 0</tt> and <tt>z
+ * from width - 1 to 0</tt>:
  * <pre>
  * [yxz]
  * [004][003][002][001][000]
@@ -18,7 +18,7 @@ import java.util.function.IntFunction;
  * [404][403][402][401][400]
  * </pre>
  * <tt>right</tt> - for standard cube, this is side with number <tt>five</tt>. For 3D array implementation, this is side with <tt>x = width - 1</tt>
- * and <tt>y from 0 to width - 1</tt>:
+ * and <tt>z from 0 to width - 1</tt>:
  * <pre>
  * [yxz]
  * [040][041][042][043][044]
