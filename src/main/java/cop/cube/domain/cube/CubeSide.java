@@ -9,10 +9,10 @@ import cop.cube.domain.SquareShape;
 @SuppressWarnings("MethodCanBeVariableArityMethod")
 public abstract class CubeSide {
 
-    protected final Cube.Side side;
+    protected final char marker;
 
-    protected CubeSide(Cube.Side side) {
-        this.side = side;
+    protected CubeSide(char marker) {
+        this.marker = marker;
     }
 
     public abstract boolean isCompleted(char[][][] data);
@@ -32,15 +32,15 @@ public abstract class CubeSide {
     }
 
     protected final void clear(int x, int y, int z, char[][][] data) {
-        data[y][x][z] = data[y][x][z] == side.marker() ? '\0' : data[y][x][z];
+        data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
     }
 
     protected final boolean add(boolean taken, int x, int y, int z, char[][][] data) {
         if (taken) {
-            if (data[y][x][z] != '\0' && data[y][x][z] != side.marker())
+            if (data[y][x][z] != '\0' && data[y][x][z] != marker)
                 return false;
 
-            data[y][x][z] = side.marker();
+            data[y][x][z] = marker;
         }
 
         return true;

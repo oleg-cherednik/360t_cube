@@ -26,7 +26,7 @@ final class TopCubeSide extends CubeSide {
     }
 
     private TopCubeSide() {
-        super(Cube.Side.TOP);
+        super(Side.TOP.marker);
     }
 
     @Override
@@ -80,7 +80,7 @@ final class TopCubeSide extends CubeSide {
 
             for (int z = 0; z < width; z++)
                 for (int x = 0; x < width; x++)
-                    mask[z][x] = data[y][x][width - z - 1] == side.marker();
+                    mask[z][x] = data[y][x][width - z - 1] == marker;
         }
 
         return mask;

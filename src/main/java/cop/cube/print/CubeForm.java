@@ -1,6 +1,7 @@
 package cop.cube.print;
 
 import cop.cube.domain.cube.Cube;
+import cop.cube.domain.cube.Side;
 
 import java.io.PrintStream;
 import java.util.Map;
@@ -38,14 +39,14 @@ public final class CubeForm implements PrintStrategy {
 
         int width = cube.getWidth();
         boolean[][] empty = new boolean[width][width];
-        Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
+        Map<Side, boolean[][]> sides = cube.getSideMask();
 
-        boolean[][] mask1 = sides.getOrDefault(Cube.Side.FRONT, empty);
-        boolean[][] mask2 = sides.getOrDefault(Cube.Side.LEFT, empty);
-        boolean[][] mask3 = sides.getOrDefault(Cube.Side.BOTTOM, empty);
-        boolean[][] mask4 = sides.getOrDefault(Cube.Side.TOP, empty);
-        boolean[][] mask5 = sides.getOrDefault(Cube.Side.RIGHT, empty);
-        boolean[][] mask6 = sides.getOrDefault(Cube.Side.BACK, empty);
+        boolean[][] mask1 = sides.getOrDefault(Side.FRONT, empty);
+        boolean[][] mask2 = sides.getOrDefault(Side.LEFT, empty);
+        boolean[][] mask3 = sides.getOrDefault(Side.BOTTOM, empty);
+        boolean[][] mask4 = sides.getOrDefault(Side.TOP, empty);
+        boolean[][] mask5 = sides.getOrDefault(Side.RIGHT, empty);
+        boolean[][] mask6 = sides.getOrDefault(Side.BACK, empty);
 
         printLine(width, empty, mask4, empty, marker, out);
         printLine(width, mask2, mask1, mask5, marker, out);

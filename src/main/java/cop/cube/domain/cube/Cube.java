@@ -87,43 +87,4 @@ public final class Cube implements Cloneable {
         return Collections.unmodifiableMap(map);
     }
 
-    public enum Side {
-        FRONT('1'),
-        LEFT('2'),
-        BOTTOM('3'),
-        TOP('4'),
-        RIGHT('5'),
-        BACK('6');
-
-        protected final char marker;
-
-        Side(char marker) {
-            this.marker = marker;
-        }
-
-        public Side next() {
-            return ordinal() == values().length - 1 ? this : values()[ordinal() + 1];
-        }
-
-        public Side previous() {
-            return ordinal() == 0 ? this : values()[ordinal() - 1];
-        }
-
-        public char marker() {
-            return marker;
-        }
-
-        private static Map<Side, CubeSide> getSideInstance() {
-            Map<Side, CubeSide> map = new EnumMap<>(Side.class);
-            map.put(FRONT, FrontCubeSide.getInstance());
-            map.put(LEFT, LeftCubeSide.getInstance());
-            map.put(BOTTOM, BottomCubeSide.getInstance());
-            map.put(TOP, TopCubeSide.getInstance());
-            map.put(RIGHT, RightCubeSide.getInstance());
-            map.put(BACK, BackCubeSide.getInstance());
-            return Collections.unmodifiableMap(map);
-        }
-
-    }
-
 }
