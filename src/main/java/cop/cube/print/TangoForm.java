@@ -32,7 +32,7 @@ public final class TangoForm implements PrintStrategy {
 
         int width = cube.getWidth();
         boolean[][] empty = new boolean[width][width];
-        Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
+        Map<Cube.Side, boolean[][]> sides = cube.getAllSideMask();
 
         for (int y = 0; y < width; y++) {
             boolean space = false;

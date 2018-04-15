@@ -38,7 +38,7 @@ public final class CubeForm implements PrintStrategy {
 
         int width = cube.getWidth();
         boolean[][] empty = new boolean[width][width];
-        Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
+        Map<Cube.Side, boolean[][]> sides = cube.getAllSideMask();
 
         boolean[][] mask1 = sides.getOrDefault(Cube.Side.FRONT, empty);
         boolean[][] mask2 = sides.getOrDefault(Cube.Side.LEFT, empty);

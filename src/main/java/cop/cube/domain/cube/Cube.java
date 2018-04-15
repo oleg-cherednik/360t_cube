@@ -21,11 +21,78 @@ public final class Cube implements Cloneable {
     private final Map<Side, CubeSide> sides = Side.getSideInstance();
     private final Deque<SquareShape> shapes = new LinkedList<>();
 
+    /** Current cube side that is ready to add next shape */
     private Side side = Side.FRONT;
 
     public Cube(int width) {
         this.width = width;
         data = new char[width][width][width];
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Add given {@code shape} to the current side (i.e. to the {@link #side}). Given {@code shape} should have same with as cube. Returns {@literal
+     * true} if given {@code shape} was successfully added to the current side and does not conflict with other not empty sides. After that, {@link
+     * #side} will be changed to the next side. Otherwise, in case of any conflict, {@literal false} will be returned and given {@code shape} will not
+     * be added.
+     *
+     * @param shape shape instance (should have same width as cube)
+     * @return {@literal true} in case of given {@code shape} was successfully added to the current side
+     */
+    public boolean addNextSide(SquareShape shape) {
+        checkShapeAndCubeWidth(shape);
+
+        boolean res = sides.get(side).add(shape, data);
+
+        if (res) {
+            side = side.next();
+            shapes.addLast(shape);
+        } else
+            sides.get(side).clear(data);
+
+        return res;
+    }
+
+    private void checkShapeAndCubeWidth(SquareShape shape) {
+        if (width != shape.getWidth())
+            throw new CubeException("Shape's width does not match with cube's width");
+    }
+
+    /** Clear current side and set {@link #side} to the previous side. */
+    public void clearCurrentSide() {
+        if (shapes.isEmpty())
+            return;
+        if (shapes.size() == Side.values().length)
+            sides.get(side).clear(data);
+        else {
+            side = side.previous();
+            sides.get(side).clear(data);
+        }
+        shapes.pollLast();
+    }
+
+    /**
+     * Check if the cube is completed. It means that all edges of all sides are taken and do not have any empty cells. Cells in the middle of the
+     * side could be empty. If cube is <tt>solved</tt>, it means that we have found a solution and {@link #shapes} contains list of used shapes.
+     *
+     * @return {@literal true} if cube is solved and all edges are taken
+     */
+    public boolean isComplete() {
+        return Side.isComplete(data);
+    }
+
+    /**
+     * Retrieve masks of all sides of the cube. This is copy of internal masks and modification of the returned arrays is not affects internal state.
+     *
+     * @return not {@literal map} of masks for all sides
+     */
+    public Map<Side, boolean[][]> getAllSideMask() {
+        Map<Side, boolean[][]> map = new EnumMap<>(Side.class);
+        sides.forEach((side, cubeSide) -> map.put(side, cubeSide.mask(data)));
+        return Collections.unmodifiableMap(map);
     }
 
     @Override
@@ -43,50 +110,7 @@ public final class Cube implements Cloneable {
         return cube;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public boolean addNextSide(SquareShape shape) {
-        if (width != shape.getWidth())
-            throw new CubeException("Shape's width does not match with cube's width");
-
-        boolean res = sides.get(side).add(shape, data);
-
-        if (res) {
-            side = side.next();
-            shapes.addLast(shape);
-        } else
-            sides.get(side).clear(data);
-
-        return res;
-    }
-
-    public void removeCurrentSide() {
-        if (shapes.isEmpty())
-            return;
-        if (shapes.size() == Side.values().length)
-            sides.get(side).clear(data);
-        else {
-            side = side.previous();
-            sides.get(side).clear(data);
-        }
-        shapes.pollLast();
-    }
-
-    public boolean isComplete() {
-        for (CubeSide cubeSide : sides.values())
-            if (!cubeSide.isCompleted(data))
-                return false;
-        return true;
-    }
-
-    public Map<Side, boolean[][]> getSideMask() {
-        Map<Side, boolean[][]> map = new EnumMap<>(Side.class);
-        sides.forEach((side, cubeSide) -> map.put(side, cubeSide.mask(data)));
-        return Collections.unmodifiableMap(map);
-    }
-
+    /** Represents enumeration of each cube's side. Each side contains it's own implementation. */
     public enum Side {
         FRONT(FrontBackCubeSide.getFrontInstance()),
         LEFT(LeftRightCubeSide.getLeftInstance()),
@@ -107,6 +131,13 @@ public final class Cube implements Cloneable {
 
         public Side previous() {
             return ordinal() == 0 ? this : values()[ordinal() - 1];
+        }
+
+        public static boolean isComplete(char[][][] data) {
+            for (Side side : values())
+                if (!side.cubeSide.isCompleted(data))
+                    return false;
+            return true;
         }
 
         private static Map<Cube.Side, CubeSide> getSideInstance() {

@@ -83,7 +83,7 @@ public final class CubeGame {
             for (SquareShape relatedShape : relatedShapes) {
                 if (cube.addNextSide(relatedShape)) {
                     solve(cube, newAvailableShapes, true);
-                    cube.removeCurrentSide();
+                    cube.clearCurrentSide();
                 }
             }
         }
