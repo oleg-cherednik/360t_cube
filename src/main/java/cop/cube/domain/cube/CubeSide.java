@@ -10,13 +10,9 @@ import cop.cube.domain.SquareShape;
 public abstract class CubeSide {
 
     protected final Cube.Side side;
-    protected final Cube.Side next;
-    protected final Cube.Side previous;
 
-    protected CubeSide(Cube.Side side, Cube.Side next, Cube.Side previous) {
+    protected CubeSide(Cube.Side side) {
         this.side = side;
-        this.next = next;
-        this.previous = previous;
     }
 
     public abstract boolean isCompleted(char[][][] data);

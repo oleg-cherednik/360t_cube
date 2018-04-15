@@ -88,72 +88,12 @@ public final class Cube implements Cloneable {
     }
 
     public enum Side {
-        FRONT('1') {
-            @Override
-            public Side next() {
-                return LEFT;
-            }
-
-            @Override
-            public Side previous() {
-                return FRONT;
-            }
-        },
-        LEFT('2') {
-            @Override
-            public Side next() {
-                return BOTTOM;
-            }
-
-            @Override
-            public Side previous() {
-                return FRONT;
-            }
-        },
-        BOTTOM('3') {
-            @Override
-            public Side next() {
-                return TOP;
-            }
-
-            @Override
-            public Side previous() {
-                return LEFT;
-            }
-        },
-        TOP('4') {
-            @Override
-            public Side next() {
-                return RIGHT;
-            }
-
-            @Override
-            public Side previous() {
-                return BOTTOM;
-            }
-        },
-        RIGHT('5') {
-            @Override
-            public Side next() {
-                return BACK;
-            }
-
-            @Override
-            public Side previous() {
-                return TOP;
-            }
-        },
-        BACK('6') {
-            @Override
-            public Side next() {
-                return BACK;
-            }
-
-            @Override
-            public Side previous() {
-                return RIGHT;
-            }
-        };
+        FRONT('1'),
+        LEFT('2'),
+        BOTTOM('3'),
+        TOP('4'),
+        RIGHT('5'),
+        BACK('6');
 
         protected final char marker;
 
@@ -161,20 +101,16 @@ public final class Cube implements Cloneable {
             this.marker = marker;
         }
 
-        public abstract Side next();
+        public Side next() {
+            return ordinal() == values().length - 1 ? this : values()[ordinal() + 1];
+        }
 
-        public abstract Side previous();
+        public Side previous() {
+            return ordinal() == 0 ? this : values()[ordinal() - 1];
+        }
 
         public char marker() {
             return marker;
-        }
-
-        protected final void clear(int x, int y, int z, char[][][] data) {
-            data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
-        }
-
-        protected static int width(char[][][] data) {
-            return data.length;
         }
 
         private static Map<Side, CubeSide> getSideInstance() {

@@ -26,7 +26,7 @@ final class FrontCubeSide extends CubeSide {
     }
 
     private FrontCubeSide() {
-        super(Cube.Side.FRONT, Cube.Side.LEFT, Cube.Side.FRONT);
+        super(Cube.Side.FRONT);
     }
 
     @Override
