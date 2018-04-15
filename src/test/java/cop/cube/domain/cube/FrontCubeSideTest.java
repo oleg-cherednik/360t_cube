@@ -12,19 +12,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Test
 public class FrontCubeSideTest {
 
+    private static final CubeSide SIDE = FrontCubeSide.getInstance();
+    private static final char MARKER = Cube.Side.FRONT.marker();
+
     public void shouldAddShapeToTheFrontSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.FRONT.add(shape, data);
+        SIDE.add(shape, data);
 
-        assertThat(data[0][0][0]).isEqualTo(Cube.Side.FRONT.marker());
+        assertThat(data[0][0][0]).isEqualTo(MARKER);
         assertThat(data[0][1][0]).isEqualTo('\0');
         assertThat(data[0][2][0]).isEqualTo('\0');
         assertThat(data[1][0][0]).isEqualTo('\0');
-        assertThat(data[1][1][0]).isEqualTo(Cube.Side.FRONT.marker());
-        assertThat(data[1][2][0]).isEqualTo(Cube.Side.FRONT.marker());
-        assertThat(data[2][0][0]).isEqualTo(Cube.Side.FRONT.marker());
-        assertThat(data[2][1][0]).isEqualTo(Cube.Side.FRONT.marker());
+        assertThat(data[1][1][0]).isEqualTo(MARKER);
+        assertThat(data[1][2][0]).isEqualTo(MARKER);
+        assertThat(data[2][0][0]).isEqualTo(MARKER);
+        assertThat(data[2][1][0]).isEqualTo(MARKER);
         assertThat(data[2][2][0]).isEqualTo('\0');
 
         for (int z = 1; z < 3; z++)
@@ -36,9 +39,9 @@ public class FrontCubeSideTest {
     public void shouldRetrieveMaskFromFrontSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.FRONT.add(shape, data);
+        SIDE.add(shape, data);
 
-        boolean[][] mask = Cube.Side.FRONT.mask(data);
+        boolean[][] mask = SIDE.mask(data);
         assertThat(mask).isNotNull();
         assertThat(mask).isEqualTo(createSquare());
     }
@@ -48,9 +51,9 @@ public class FrontCubeSideTest {
 
         for (int y = 0; y < 3; y++)
             for (int x = 0; x < 3; x++)
-                data[y][x][0] = Cube.Side.FRONT.marker();
+                data[y][x][0] = MARKER;
 
-        Cube.Side.FRONT.clear(data);
+        SIDE.clear(data);
 
         for (int y = 0; y < 3; y++)
             for (int x = 0; x < 3; x++)
@@ -70,7 +73,7 @@ public class FrontCubeSideTest {
         data[2][1][0] = 'A';
         data[2][2][0] = 'A';
 
-        assertThat(Cube.Side.FRONT.isCompleted(data)).isTrue();
+        assertThat(SIDE.isCompleted(data)).isTrue();
     }
 
     private static boolean[][] createSquare() {
