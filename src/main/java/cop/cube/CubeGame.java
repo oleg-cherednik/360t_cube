@@ -71,7 +71,7 @@ public final class CubeGame {
     }
 
     private void solve(Cube cube, Set<SquareShape> shapes, boolean useRelated) {
-        if (shapes.isEmpty() && cube.isComplete()) {
+        if (shapes.isEmpty() && cube.isSolved()) {
             cubes.add(cube.clone());
             return;
         }

@@ -56,7 +56,7 @@ final class TopBottomCubeSide extends CubeSide {
 
     @Override
     @SuppressWarnings("Duplicates")
-    public boolean isCompleted(char[][][] data) {
+    public boolean isSolved(char[][][] data) {
         final int width = width(data);
         final int y = axisY.apply(width);
 

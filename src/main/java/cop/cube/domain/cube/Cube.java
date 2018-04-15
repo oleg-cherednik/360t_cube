@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
+ * This is representation of the cube. Cube has <tt>width</tt> and 6 sides. Up to 6 {@link SquareShape} could be added to the cube's sides and then
+ * check if the cube is <tt>solved</tt> or not.
+ *
  * @author Oleg Cherednik
  * @since 11.04.2018
  */
@@ -80,8 +83,8 @@ public final class Cube implements Cloneable {
      *
      * @return {@literal true} if cube is solved and all edges are taken
      */
-    public boolean isComplete() {
-        return Side.isComplete(data);
+    public boolean isSolved() {
+        return Side.isSolved(data);
     }
 
     /**
@@ -133,9 +136,9 @@ public final class Cube implements Cloneable {
             return ordinal() == 0 ? this : values()[ordinal() - 1];
         }
 
-        public static boolean isComplete(char[][][] data) {
+        public static boolean isSolved(char[][][] data) {
             for (Side side : values())
-                if (!side.cubeSide.isCompleted(data))
+                if (!side.cubeSide.isSolved(data))
                     return false;
             return true;
         }

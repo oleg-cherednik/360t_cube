@@ -73,7 +73,7 @@ public class TopCubeSideTest {
         data[0][1][2] = 'A';
         data[0][2][2] = 'A';
 
-        assertThat(SIDE.isCompleted(data)).isTrue();
+        assertThat(SIDE.isSolved(data)).isTrue();
     }
 
     private static boolean[][] createSquare() {

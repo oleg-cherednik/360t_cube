@@ -19,7 +19,7 @@ abstract class CubeSide {
         return marker;
     }
 
-    public abstract boolean isCompleted(char[][][] data);
+    public abstract boolean isSolved(char[][][] data);
 
     public abstract void clear(char[][][] data);
 

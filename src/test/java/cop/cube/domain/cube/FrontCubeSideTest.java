@@ -73,7 +73,7 @@ public class FrontCubeSideTest {
         data[2][1][0] = 'A';
         data[2][2][0] = 'A';
 
-        assertThat(SIDE.isCompleted(data)).isTrue();
+        assertThat(SIDE.isSolved(data)).isTrue();
     }
 
     private static boolean[][] createSquare() {
