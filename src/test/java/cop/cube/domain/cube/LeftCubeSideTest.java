@@ -12,19 +12,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Test
 public class LeftCubeSideTest {
 
+    private static final CubeSide SIDE = LeftCubeSide.getInstance();
+    private static final char MARKER = Cube.Side.LEFT.marker();
+
     public void shouldAddShapeToTheLeftSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.LEFT.add(shape, data);
+        SIDE.add(shape, data);
 
-        assertThat(data[0][0][2]).isEqualTo(Cube.Side.LEFT.marker());
+        assertThat(data[0][0][2]).isEqualTo(MARKER);
         assertThat(data[0][0][1]).isEqualTo('\0');
         assertThat(data[0][0][0]).isEqualTo('\0');
         assertThat(data[1][0][2]).isEqualTo('\0');
-        assertThat(data[1][0][1]).isEqualTo(Cube.Side.LEFT.marker());
-        assertThat(data[1][0][0]).isEqualTo(Cube.Side.LEFT.marker());
-        assertThat(data[2][0][2]).isEqualTo(Cube.Side.LEFT.marker());
-        assertThat(data[2][0][1]).isEqualTo(Cube.Side.LEFT.marker());
+        assertThat(data[1][0][1]).isEqualTo(MARKER);
+        assertThat(data[1][0][0]).isEqualTo(MARKER);
+        assertThat(data[2][0][2]).isEqualTo(MARKER);
+        assertThat(data[2][0][1]).isEqualTo(MARKER);
         assertThat(data[2][0][0]).isEqualTo('\0');
 
         for (int z = 0; z < 3; z++)
@@ -36,9 +39,9 @@ public class LeftCubeSideTest {
     public void shouldRetrieveMaskFromLeftSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.LEFT.add(shape, data);
+        SIDE.add(shape, data);
 
-        boolean[][] mask = Cube.Side.LEFT.mask(data);
+        boolean[][] mask = SIDE.mask(data);
         assertThat(mask).isNotNull();
         assertThat(mask).isEqualTo(createSquare());
     }
@@ -48,9 +51,9 @@ public class LeftCubeSideTest {
 
         for (int y = 0; y < 3; y++)
             for (int z = 0; z < 3; z++)
-                data[y][0][z] = Cube.Side.LEFT.marker();
+                data[y][0][z] = MARKER;
 
-        Cube.Side.LEFT.clear(data);
+        SIDE.clear(data);
 
         for (int y = 0; y < 3; y++)
             for (int z = 0; z < 3; z++)
@@ -70,7 +73,7 @@ public class LeftCubeSideTest {
         data[2][0][1] = 'A';
         data[2][0][2] = 'A';
 
-        assertThat(Cube.Side.LEFT.isCompleted(data)).isTrue();
+        assertThat(SIDE.isCompleted(data)).isTrue();
     }
 
     private static boolean[][] createSquare() {
