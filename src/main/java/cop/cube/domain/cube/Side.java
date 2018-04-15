@@ -32,12 +32,12 @@ public enum Side {
 
     static Map<Side, CubeSide> getSideInstance() {
         Map<Side, CubeSide> map = new EnumMap<>(Side.class);
-        map.put(FRONT, FrontCubeSide.getInstance());
+        map.put(FRONT, FrontBackCubeSide.getFrontInstance());
         map.put(LEFT, LeftCubeSide.getInstance());
         map.put(BOTTOM, BottomCubeSide.getInstance());
         map.put(TOP, TopCubeSide.getInstance());
         map.put(RIGHT, RightCubeSide.getInstance());
-        map.put(BACK, BackCubeSide.getInstance());
+        map.put(BACK, FrontBackCubeSide.getBackInstance());
         return Collections.unmodifiableMap(map);
     }
 }
