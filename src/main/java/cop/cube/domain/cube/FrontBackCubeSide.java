@@ -7,7 +7,7 @@ import java.util.function.IntFunction;
 
 /**
  * Represents two sides of the cube:<br>
- * <tt>front</tt> - for standard cube, this is side with number <tt>one</tt>. For 3D array implementation, this is side with <tt>z=0</tt> and <tt>y
+ * <tt>front</tt> - for standard cube, this is side with number <tt>one</tt>. For 3D array implementation, this is side with <tt>z = 0</tt> and <tt>y
  * from 0 to width - 1</tt>:
  * <pre>
  * [yxz]
@@ -49,7 +49,7 @@ final class FrontBackCubeSide extends CubeSide {
     private final BiFunction<Integer, Integer, Integer> axisY;
 
     private FrontBackCubeSide(Side side, IntFunction<Integer> axisZ, BiFunction<Integer, Integer, Integer> axisY) {
-        super(side.marker);
+        super(side);
         this.axisZ = axisZ;
         this.axisY = axisY;
     }
@@ -105,7 +105,7 @@ final class FrontBackCubeSide extends CubeSide {
 
             for (int y = 0; y < width; y++)
                 for (int x = 0; x < width; x++)
-                    mask[y][x] = data[axisY.apply(y, width)][x][z] == marker;
+                    mask[y][x] = data[axisY.apply(y, width)][x][z] == side.marker;
         }
 
         return mask;

@@ -18,7 +18,7 @@ public final class Cube implements Cloneable {
 
     private final int width;
     private final char[][][] data;
-    private final Map<Side, CubeSide> sides = Side.getSideInstance();
+    private final Map<Side, CubeSide> sides = CubeSide.getSideInstance();
     private final Deque<SquareShape> shapes = new LinkedList<>();
 
     private Side side = Side.FRONT;
@@ -65,7 +65,7 @@ public final class Cube implements Cloneable {
     public void removeCurrentSide() {
         if (shapes.isEmpty())
             return;
-        if (shapes.size() == 6)
+        if (shapes.size() == Side.values().length)
             sides.get(side).clear(data);
         else {
             side = side.previous();
