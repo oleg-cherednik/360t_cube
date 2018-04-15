@@ -326,7 +326,7 @@ public final class Cube implements Cloneable {
             @Override
             public boolean isCompleted(char[][][] data) {
                 final int width = width(data);
-                final int y =0;
+                final int y = 0;
 
                 for (int x = 0; x < width; x++)
                     if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
@@ -396,10 +396,13 @@ public final class Cube implements Cloneable {
                 final int width = width(data);
                 final int x = width - 1;
 
+                for (int z = 0; z < width; z++)
+                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
+                        return false;
+
                 for (int y = 0; y < width; y++)
-                    for (int z = 0; z < width; z++)
-                        if (!isTaken(x, y, z, data))
-                            return false;
+                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
+                        return false;
 
                 return true;
             }
@@ -579,6 +582,7 @@ public final class Cube implements Cloneable {
             map.put(LEFT, LeftCubeSide.getInstance());
             map.put(BOTTOM, BottomCubeSide.getInstance());
             map.put(TOP, TopCubeSide.getInstance());
+            map.put(RIGHT, RightCubeSide.getInstance());
             return Collections.unmodifiableMap(map);
         }
 
