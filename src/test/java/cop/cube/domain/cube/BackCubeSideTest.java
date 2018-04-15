@@ -18,7 +18,7 @@ public class BackCubeSideTest {
     public void shouldAddShapeToTheBackSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.BACK.add(shape, data);
+        SIDE.add(shape, data);
 
         assertThat(data[2][0][2]).isEqualTo(MARKER);
         assertThat(data[2][1][2]).isEqualTo('\0');
@@ -39,9 +39,9 @@ public class BackCubeSideTest {
     public void shouldRetrieveMaskFromBackSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.BACK.add(shape, data);
+        SIDE.add(shape, data);
 
-        boolean[][] mask = Cube.Side.BACK.mask(data);
+        boolean[][] mask = SIDE.mask(data);
         assertThat(mask).isNotNull();
         assertThat(mask).isEqualTo(createSquare());
     }
@@ -53,7 +53,7 @@ public class BackCubeSideTest {
             for (int x = 0; x < 3; x++)
                 data[y][x][2] = MARKER;
 
-        Cube.Side.BACK.clear(data);
+        SIDE.clear(data);
 
         for (int y = 0; y < 3; y++)
             for (int x = 0; x < 3; x++)
@@ -73,7 +73,7 @@ public class BackCubeSideTest {
         data[2][1][2] = 'A';
         data[2][2][2] = 'A';
 
-        assertThat(Cube.Side.BACK.isCompleted(data)).isTrue();
+        assertThat(SIDE.isCompleted(data)).isTrue();
     }
 
     private static boolean[][] createSquare() {
