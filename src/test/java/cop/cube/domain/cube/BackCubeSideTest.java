@@ -12,19 +12,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Test
 public class BackCubeSideTest {
 
+    private static final CubeSide SIDE = BackCubeSide.getInstance();
+    private static final char MARKER = Cube.Side.BACK.marker();
+
     public void shouldAddShapeToTheBackSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
         Cube.Side.BACK.add(shape, data);
 
-        assertThat(data[2][0][2]).isEqualTo(Cube.Side.BACK.marker());
+        assertThat(data[2][0][2]).isEqualTo(MARKER);
         assertThat(data[2][1][2]).isEqualTo('\0');
         assertThat(data[2][2][2]).isEqualTo('\0');
         assertThat(data[1][0][2]).isEqualTo('\0');
-        assertThat(data[1][1][2]).isEqualTo(Cube.Side.BACK.marker());
-        assertThat(data[1][2][2]).isEqualTo(Cube.Side.BACK.marker());
-        assertThat(data[0][0][2]).isEqualTo(Cube.Side.BACK.marker());
-        assertThat(data[0][1][2]).isEqualTo(Cube.Side.BACK.marker());
+        assertThat(data[1][1][2]).isEqualTo(MARKER);
+        assertThat(data[1][2][2]).isEqualTo(MARKER);
+        assertThat(data[0][0][2]).isEqualTo(MARKER);
+        assertThat(data[0][1][2]).isEqualTo(MARKER);
         assertThat(data[0][2][2]).isEqualTo('\0');
 
         for (int z = 0; z < 2; z++)
@@ -48,7 +51,7 @@ public class BackCubeSideTest {
 
         for (int y = 0; y < 3; y++)
             for (int x = 0; x < 3; x++)
-                data[y][x][2] = Cube.Side.BACK.marker();
+                data[y][x][2] = MARKER;
 
         Cube.Side.BACK.clear(data);
 
