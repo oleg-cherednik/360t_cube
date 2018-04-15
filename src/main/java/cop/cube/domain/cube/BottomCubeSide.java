@@ -49,21 +49,21 @@ final class BottomCubeSide extends CubeSide {
     @Override
     public void clear(char[][][] data) {
         final int width = width(data);
-        final int x = 0;
+        final int y = width - 1;
 
-        for (int y = 0; y < width; y++)
-            for (int z = width - 1; z >= 0; z--)
+        for (int z = 0; z < width; z++)
+            for (int x = 0; x < width; x++)
                 clear(x, y, z, data);
     }
 
     @Override
     public boolean add(SquareShape shape, char[][][] data) {
         final int width = width(data);
-        final int x = 0;
+        final int y = width - 1;
 
-        for (int y = 0; y < width; y++)
-            for (int z = width - 1; z >= 0; z--)
-                if (!add(shape.isTaken(width - z - 1, y), x, y, z, data))
+        for (int z = 0; z < width; z++)
+            for (int x = 0; x < width; x++)
+                if (!add(shape.isTaken(x, z), x, y, z, data))
                     return false;
 
         return true;
@@ -75,13 +75,13 @@ final class BottomCubeSide extends CubeSide {
 
         if (data != null) {
             final int width = width(data);
-            final int x = 0;
+            final int y = width - 1;
 
             mask = new boolean[width][width];
 
-            for (int y = 0; y < width; y++)
-                for (int z = width - 1; z >= 0; z--)
-                    mask[y][z] = data[y][x][width - z - 1] == side.marker();
+            for (int z = 0; z < width; z++)
+                for (int x = 0; x < width; x++)
+                    mask[z][x] = data[y][x][z] == side.marker();
         }
 
         return mask;

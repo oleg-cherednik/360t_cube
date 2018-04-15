@@ -12,19 +12,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Test
 public class BottomCubeSideTest {
 
+    private static final CubeSide SIDE = BottomCubeSide.getInstance();
+    private static final char MARKER = Cube.Side.BOTTOM.marker();
+
     public void shouldAddShapeToTheBottomSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.BOTTOM.add(shape, data);
+        SIDE.add(shape, data);
 
-        assertThat(data[2][0][0]).isEqualTo(Cube.Side.BOTTOM.marker());
+        assertThat(data[2][0][0]).isEqualTo(MARKER);
         assertThat(data[2][1][0]).isEqualTo('\0');
         assertThat(data[2][2][0]).isEqualTo('\0');
         assertThat(data[2][0][1]).isEqualTo('\0');
-        assertThat(data[2][1][1]).isEqualTo(Cube.Side.BOTTOM.marker());
-        assertThat(data[2][2][1]).isEqualTo(Cube.Side.BOTTOM.marker());
-        assertThat(data[2][0][2]).isEqualTo(Cube.Side.BOTTOM.marker());
-        assertThat(data[2][1][2]).isEqualTo(Cube.Side.BOTTOM.marker());
+        assertThat(data[2][1][1]).isEqualTo(MARKER);
+        assertThat(data[2][2][1]).isEqualTo(MARKER);
+        assertThat(data[2][0][2]).isEqualTo(MARKER);
+        assertThat(data[2][1][2]).isEqualTo(MARKER);
         assertThat(data[2][2][2]).isEqualTo('\0');
 
         for (int z = 0; z < 3; z++)
@@ -36,9 +39,9 @@ public class BottomCubeSideTest {
     public void shouldRetrieveMaskFromBottomSide() {
         char[][][] data = new char[3][3][3];
         SquareShape shape = SquareShape.create('A', createSquare());
-        Cube.Side.BOTTOM.add(shape, data);
+        SIDE.add(shape, data);
 
-        boolean[][] mask = Cube.Side.BOTTOM.mask(data);
+        boolean[][] mask = SIDE.mask(data);
         assertThat(mask).isNotNull();
         assertThat(mask).isEqualTo(createSquare());
     }
@@ -48,9 +51,9 @@ public class BottomCubeSideTest {
 
         for (int z = 0; z < 3; z++)
             for (int x = 0; x < 3; x++)
-                data[2][x][z] = Cube.Side.BOTTOM.marker();
+                data[2][x][z] = MARKER;
 
-        Cube.Side.BOTTOM.clear(data);
+        SIDE.clear(data);
 
         for (int z = 0; z < 3; z++)
             for (int x = 0; x < 3; x++)
@@ -70,7 +73,7 @@ public class BottomCubeSideTest {
         data[2][1][2] = 'A';
         data[2][2][2] = 'A';
 
-        assertThat(Cube.Side.BOTTOM.isCompleted(data)).isTrue();
+        assertThat(SIDE.isCompleted(data)).isTrue();
     }
 
     private static boolean[][] createSquare() {
