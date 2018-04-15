@@ -34,8 +34,8 @@ import java.util.function.IntFunction;
 @SuppressWarnings({ "MethodCanBeVariableArityMethod", "FieldNamingConvention" })
 final class FrontBackCubeSide extends CubeSide {
 
-    private static final FrontBackCubeSide FRONT = new FrontBackCubeSide(Side.FRONT, width -> 0, (y, width) -> y);
-    private static final FrontBackCubeSide BACK = new FrontBackCubeSide(Side.BACK, width -> width - 1, (y, width) -> width - y - 1);
+    private static final FrontBackCubeSide FRONT = new FrontBackCubeSide('1', width -> 0, (y, width) -> y);
+    private static final FrontBackCubeSide BACK = new FrontBackCubeSide('6', width -> width - 1, (y, width) -> width - y - 1);
 
     public static FrontBackCubeSide getFrontInstance() {
         return FRONT;
@@ -48,8 +48,8 @@ final class FrontBackCubeSide extends CubeSide {
     private final IntFunction<Integer> axisZ;
     private final BiFunction<Integer, Integer, Integer> axisY;
 
-    private FrontBackCubeSide(Side side, IntFunction<Integer> axisZ, BiFunction<Integer, Integer, Integer> axisY) {
-        super(side);
+    private FrontBackCubeSide(char marker, IntFunction<Integer> axisZ, BiFunction<Integer, Integer, Integer> axisY) {
+        super(marker);
         this.axisZ = axisZ;
         this.axisY = axisY;
     }
@@ -105,7 +105,7 @@ final class FrontBackCubeSide extends CubeSide {
 
             for (int y = 0; y < width; y++)
                 for (int x = 0; x < width; x++)
-                    mask[y][x] = data[axisY.apply(y, width)][x][z] == side.marker;
+                    mask[y][x] = data[axisY.apply(y, width)][x][z] == getMarker();
         }
 
         return mask;

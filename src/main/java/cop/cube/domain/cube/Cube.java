@@ -18,7 +18,7 @@ public final class Cube implements Cloneable {
 
     private final int width;
     private final char[][][] data;
-    private final Map<Side, CubeSide> sides = CubeSide.getSideInstance();
+    private final Map<Side, CubeSide> sides = Side.getSideInstance();
     private final Deque<SquareShape> shapes = new LinkedList<>();
 
     private Side side = Side.FRONT;
@@ -85,6 +85,38 @@ public final class Cube implements Cloneable {
         Map<Side, boolean[][]> map = new EnumMap<>(Side.class);
         sides.forEach((side, cubeSide) -> map.put(side, cubeSide.mask(data)));
         return Collections.unmodifiableMap(map);
+    }
+
+    public enum Side {
+        FRONT(FrontBackCubeSide.getFrontInstance()),
+        LEFT(LeftRightCubeSide.getLeftInstance()),
+        BOTTOM(TopBottomCubeSide.getBottomInstance()),
+        TOP(TopBottomCubeSide.getTopInstance()),
+        RIGHT(LeftRightCubeSide.getRightInstance()),
+        BACK(FrontBackCubeSide.getBackInstance());
+
+        final CubeSide cubeSide;
+
+        Side(CubeSide cubeSide) {
+            this.cubeSide = cubeSide;
+        }
+
+        public Side next() {
+            return ordinal() == values().length - 1 ? this : values()[ordinal() + 1];
+        }
+
+        public Side previous() {
+            return ordinal() == 0 ? this : values()[ordinal() - 1];
+        }
+
+        private static Map<Cube.Side, CubeSide> getSideInstance() {
+            Map<Cube.Side, CubeSide> map = new EnumMap<>(Cube.Side.class);
+
+            for (Side side : values())
+                map.put(side, side.cubeSide);
+
+            return Collections.unmodifiableMap(map);
+        }
     }
 
 }

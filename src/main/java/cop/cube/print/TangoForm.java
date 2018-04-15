@@ -1,7 +1,6 @@
 package cop.cube.print;
 
 import cop.cube.domain.cube.Cube;
-import cop.cube.domain.cube.Side;
 
 import java.io.PrintStream;
 import java.util.Map;
@@ -33,12 +32,12 @@ public final class TangoForm implements PrintStrategy {
 
         int width = cube.getWidth();
         boolean[][] empty = new boolean[width][width];
-        Map<Side, boolean[][]> sides = cube.getSideMask();
+        Map<Cube.Side, boolean[][]> sides = cube.getSideMask();
 
         for (int y = 0; y < width; y++) {
             boolean space = false;
 
-            for (Side side : Side.values()) {
+            for (Cube.Side side : Cube.Side.values()) {
                 if (space)
                     out.print(' ');
 

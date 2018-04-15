@@ -31,11 +31,11 @@ import java.util.function.IntFunction;
  * @author Oleg Cherednik
  * @since 14.04.2018
  */
-@SuppressWarnings("MethodCanBeVariableArityMethod")
+@SuppressWarnings({ "MethodCanBeVariableArityMethod", "FieldNamingConvention" })
 final class TopBottomCubeSide extends CubeSide {
 
-    private static final TopBottomCubeSide TOP = new TopBottomCubeSide(Side.TOP, width -> 0, (z, width) -> width - z - 1);
-    private static final TopBottomCubeSide BOTTOM = new TopBottomCubeSide(Side.BOTTOM, width -> width - 1, (z, width) -> z);
+    private static final TopBottomCubeSide TOP = new TopBottomCubeSide('4', width -> 0, (z, width) -> width - z - 1);
+    private static final TopBottomCubeSide BOTTOM = new TopBottomCubeSide('3', width -> width - 1, (z, width) -> z);
 
     public static TopBottomCubeSide getTopInstance() {
         return TOP;
@@ -48,8 +48,8 @@ final class TopBottomCubeSide extends CubeSide {
     private final IntFunction<Integer> axisY;
     private final BiFunction<Integer, Integer, Integer> axisZ;
 
-    private TopBottomCubeSide(Side side, IntFunction<Integer> axisY, BiFunction<Integer, Integer, Integer> axisZ) {
-        super(side);
+    private TopBottomCubeSide(char marker, IntFunction<Integer> axisY, BiFunction<Integer, Integer, Integer> axisZ) {
+        super(marker);
         this.axisY = axisY;
         this.axisZ = axisZ;
     }
@@ -105,7 +105,7 @@ final class TopBottomCubeSide extends CubeSide {
 
             for (int z = 0; z < width; z++)
                 for (int x = 0; x < width; x++)
-                    mask[z][x] = data[y][x][axisZ.apply(z, width)] == side.marker;
+                    mask[z][x] = data[y][x][axisZ.apply(z, width)] == getMarker();
         }
 
         return mask;

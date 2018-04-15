@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RightCubeSideTest {
 
     private static final CubeSide SIDE = LeftRightCubeSide.getRightInstance();
-    private static final char MARKER = SIDE.getSide().marker;
+    private static final char MARKER = SIDE.getMarker();
 
     public void shouldAddShapeToTheRightSide() {
         char[][][] data = new char[3][3][3];
