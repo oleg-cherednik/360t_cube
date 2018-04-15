@@ -57,7 +57,7 @@ public final class Cube implements Cloneable {
             side = side.next();
             shapes.addLast(shape);
         } else
-            side.clear(data);
+            sides.get(side).clear(data);
 
         return res;
     }
@@ -66,16 +66,19 @@ public final class Cube implements Cloneable {
         if (shapes.isEmpty())
             return;
         if (shapes.size() == 6)
-            side.clear(data);
+            sides.get(side).clear(data);
         else {
             side = side.previous();
-            side.clear(data);
+            sides.get(side).clear(data);
         }
         shapes.pollLast();
     }
 
     public boolean isComplete() {
-        return Side.isAllCompleted(data);
+        for (CubeSide cubeSide : sides.values())
+            if (!cubeSide.isCompleted(data))
+                return false;
+        return true;
     }
 
     public Map<Side, boolean[][]> getSideMask() {
@@ -86,32 +89,6 @@ public final class Cube implements Cloneable {
 
     public enum Side {
         FRONT('1') {
-            @Override
-            public boolean isCompleted(char[][][] data) {
-                final int width = width(data);
-                final int z = 0;
-
-                for (int x = 0; x < width; x++)
-                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
-                        return false;
-
-                for (int y = 0; y < width; y++)
-                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
-                        return false;
-
-                return true;
-            }
-
-            @Override
-            public void clear(char[][][] data) {
-                final int width = width(data);
-                final int z = 0;
-
-                for (int y = 0; y < width; y++)
-                    for (int x = 0; x < width; x++)
-                        clear(x, y, z, data);
-            }
-
             @Override
             public Side next() {
                 return LEFT;
@@ -124,32 +101,6 @@ public final class Cube implements Cloneable {
         },
         LEFT('2') {
             @Override
-            public boolean isCompleted(char[][][] data) {
-                final int width = width(data);
-                final int x = 0;
-
-                for (int z = 0; z < width; z++)
-                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
-                        return false;
-
-                for (int y = 0; y < width; y++)
-                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
-                        return false;
-
-                return true;
-            }
-
-            @Override
-            public void clear(char[][][] data) {
-                final int width = width(data);
-                final int x = 0;
-
-                for (int y = 0; y < width; y++)
-                    for (int z = width - 1; z >= 0; z--)
-                        clear(x, y, z, data);
-            }
-
-            @Override
             public Side next() {
                 return BOTTOM;
             }
@@ -160,32 +111,6 @@ public final class Cube implements Cloneable {
             }
         },
         BOTTOM('3') {
-            @Override
-            public boolean isCompleted(char[][][] data) {
-                final int width = width(data);
-                final int y = width - 1;
-
-                for (int x = 0; x < width; x++)
-                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
-                        return false;
-
-                for (int z = 0; z < width; z++)
-                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
-                        return false;
-
-                return true;
-            }
-
-            @Override
-            public void clear(char[][][] data) {
-                final int width = width(data);
-                final int y = width - 1;
-
-                for (int z = 0; z < width; z++)
-                    for (int x = 0; x < width; x++)
-                        clear(x, y, z, data);
-            }
-
             @Override
             public Side next() {
                 return TOP;
@@ -198,32 +123,6 @@ public final class Cube implements Cloneable {
         },
         TOP('4') {
             @Override
-            public boolean isCompleted(char[][][] data) {
-                final int width = width(data);
-                final int y = 0;
-
-                for (int x = 0; x < width; x++)
-                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
-                        return false;
-
-                for (int z = 0; z < width; z++)
-                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
-                        return false;
-
-                return true;
-            }
-
-            @Override
-            public void clear(char[][][] data) {
-                final int width = width(data);
-                final int y = 0;
-
-                for (int z = width - 1; z >= 0; z--)
-                    for (int x = 0; x < width; x++)
-                        clear(x, y, z, data);
-            }
-
-            @Override
             public Side next() {
                 return RIGHT;
             }
@@ -235,32 +134,6 @@ public final class Cube implements Cloneable {
         },
         RIGHT('5') {
             @Override
-            public boolean isCompleted(char[][][] data) {
-                final int width = width(data);
-                final int x = width - 1;
-
-                for (int z = 0; z < width; z++)
-                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
-                        return false;
-
-                for (int y = 0; y < width; y++)
-                    if (!isTaken(x, y, 0, data) || !isTaken(x, y, width - 1, data))
-                        return false;
-
-                return true;
-            }
-
-            @Override
-            public void clear(char[][][] data) {
-                final int width = width(data);
-                final int x = width - 1;
-
-                for (int y = 0; y < width; y++)
-                    for (int z = 0; z < width; z++)
-                        clear(x, y, z, data);
-            }
-
-            @Override
             public Side next() {
                 return BACK;
             }
@@ -271,32 +144,6 @@ public final class Cube implements Cloneable {
             }
         },
         BACK('6') {
-            @Override
-            public boolean isCompleted(char[][][] data) {
-                final int width = width(data);
-                final int z = width - 1;
-
-                for (int x = 0; x < width; x++)
-                    if (!isTaken(x, 0, z, data) || !isTaken(x, width - 1, z, data))
-                        return false;
-
-                for (int y = 0; y < width; y++)
-                    if (!isTaken(0, y, z, data) || !isTaken(width - 1, y, z, data))
-                        return false;
-
-                return true;
-            }
-
-            @Override
-            public void clear(char[][][] data) {
-                final int width = width(data);
-                final int z = width - 1;
-
-                for (int y = 0; y < width; y++)
-                    for (int x = 0; x < width; x++)
-                        clear(x, y, z, data);
-            }
-
             @Override
             public Side next() {
                 return BACK;
@@ -314,10 +161,6 @@ public final class Cube implements Cloneable {
             this.marker = marker;
         }
 
-        public abstract boolean isCompleted(char[][][] data);
-
-        public abstract void clear(char[][][] data);
-
         public abstract Side next();
 
         public abstract Side previous();
@@ -330,19 +173,8 @@ public final class Cube implements Cloneable {
             data[y][x][z] = data[y][x][z] == marker ? '\0' : data[y][x][z];
         }
 
-        protected static boolean isTaken(int x, int y, int z, char[][][] data) {
-            return data[y][x][z] != '\0';
-        }
-
         protected static int width(char[][][] data) {
             return data.length;
-        }
-
-        public static boolean isAllCompleted(char[][][] data) {
-            for (Side side : values())
-                if (!side.isCompleted(data))
-                    return false;
-            return true;
         }
 
         private static Map<Side, CubeSide> getSideInstance() {
