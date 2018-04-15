@@ -84,7 +84,7 @@ public final class Cube implements Cloneable {
     }
 
     /**
-     * Check if the cube is completed. It means that all edges of all sides are taken and do not have any empty cells. Cells in the middle of the
+     * Check if the cube is solved. It means that all edges of all sides are taken and do not have any empty cells. Cells in the middle of the
      * side could be empty. If cube is <tt>solved</tt>, it means that we have found a solution and {@link #shapes} contains list of used shapes.
      *
      * @return {@literal true} if cube is solved and all edges are taken
